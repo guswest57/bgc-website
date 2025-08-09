@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+Sitemap: https://guswest57.github.io/bgc-website/sitemap.xml
+

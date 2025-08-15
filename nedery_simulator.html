@@ -111,8 +111,9 @@
                         <p class="text-justify">A simulation run with the logistic map (r=4.0) and a Nedery bias (β=0.1) yielded a stunning result, confirming the core prediction of our hypothesis. The standard chaotic system exhibited a diffusion exponent of α = 1.41, while the Nedery-influenced system showed a dramatic increase to α = 2.01, a clear signature of anomalous diffusion. This provides the first piece of simulated evidence for the Nedery effect.</p>
                     </div>
                     <div class="md:w-1/2">
-                        <!-- Replace with your actual screenshot -->
-                        <img src="https://i.imgur.com/8F9b2aE.png" alt="Screenshot of the Nedery Simulator breakthrough result" class="rounded-lg shadow-lg" onerror="this.onerror=null;this.src='https://placehold.co/600x400/0d1117/d1d5db?text=Breakthrough+Result';">
+                        <!-- IMAGE FIX: Replaced placeholder with a relative path. -->
+                        <!-- You will need to upload your screenshot and name it 'breakthrough_result.png' -->
+                        <img src="breakthrough_result.png" alt="Screenshot of the Nedery Simulator breakthrough result" class="rounded-lg shadow-lg" onerror="this.onerror=null;this.src='https://placehold.co/600x400/0d1117/d1d5db?text=Image+not+found';">
                     </div>
                 </div>
             </div>
@@ -140,7 +141,7 @@
         let varianceChart;
         let lastResults = null;
 
-        function createChart() { /* ... same as v2 ... */ 
+        function createChart() { 
             const ctx = document.getElementById('varianceChart').getContext('2d');
             if (varianceChart) varianceChart.destroy();
             varianceChart = new Chart(ctx, {
@@ -171,7 +172,7 @@
         function logisticMap(x, r) { return r * x * (1 - x); }
         function tentMap(x, r) { return r * (1 - Math.abs(2 * x - 1)); }
 
-        function shannonEntropy(data, bins = 10) { /* ... same as v2 ... */ 
+        function shannonEntropy(data, bins = 10) { 
             if (data.length === 0) return 0;
             const hist = new Array(bins).fill(0);
             data.forEach(d => { const bin = Math.floor(d * bins); if (bin >= 0 && bin < bins) hist[bin]++; });
@@ -189,7 +190,7 @@
             return compressed.length / binaryStr.length;
         }
 
-        function fitDiffusionAlpha(varianceData) { /* ... same as v2 ... */ 
+        function fitDiffusionAlpha(varianceData) { 
             const logX = [], logY = [];
             for (let i = 50; i < varianceData.length; i++) { if (varianceData[i] > 1e-9) { logX.push(Math.log(i + 1)); logY.push(Math.log(varianceData[i])); } }
             if (logX.length < 10) return 1.0;
@@ -268,7 +269,20 @@
 
         function downloadCSV() {
             if (!lastResults) {
-                alert('Please run a simulation first.');
+                // Using a custom message box instead of alert
+                const msgBox = document.createElement('div');
+                msgBox.style.position = 'fixed';
+                msgBox.style.top = '20px';
+                msgBox.style.left = '50%';
+                msgBox.style.transform = 'translateX(-50%)';
+                msgBox.style.padding = '1rem 2rem';
+                msgBox.style.backgroundColor = '#ef4444'; // red-500
+                msgBox.style.color = 'white';
+                msgBox.style.borderRadius = '0.5rem';
+                msgBox.style.boxShadow = '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)';
+                msgBox.textContent = 'Please run a simulation first.';
+                document.body.appendChild(msgBox);
+                setTimeout(() => document.body.removeChild(msgBox), 3000);
                 return;
             }
             let csvContent = "data:text/csv;charset=utf-8,TimeStep,Standard_Variance,Nedery_Variance\n";
@@ -288,11 +302,10 @@
         // --- Event Listeners ---
         runButton.addEventListener('click', startSimulation);
         downloadButton.addEventListener('click', downloadCSV);
-        rValueSlider.addEventListener('input', (e) => rValueLabel.textContent = parseFloat(e.target.value).toFixed(2));
+        rValueSlider.addEventListener('input', (e) => rValueLabel.textContent = parseFloat(e.target..value).toFixed(2));
         nederyBiasSlider.addEventListener('input', (e) => nederyBiasLabel.textContent = parseFloat(e.target.value).toFixed(2));
         window.addEventListener('load', createChart);
     </script>
 </body>
 </html>
-
 

@@ -72,6 +72,8 @@
                 <div class="flex flex-col space-y-2">
                      <button id="runButton" class="w-full bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors">Run Simulation</button>
                      <button id="downloadButton" class="w-full bg-green-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-green-700 transition-colors">Download CSV</button>
+                     <!-- RESET BUTTON ADDED HERE -->
+                     <button id="resetButton" class="w-full bg-gray-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-gray-700 transition-colors">Reset</button>
                 </div>
             </div>
              <p id="status" class="text-center text-sm text-gray-500 mt-4">Ready to run simulation.</p>
@@ -111,8 +113,6 @@
                         <p class="text-justify">A simulation run with the logistic map (r=4.0) and a Nedery bias (β=0.1) yielded a stunning result, confirming the core prediction of our hypothesis. The standard chaotic system exhibited a diffusion exponent of α = 1.41, while the Nedery-influenced system showed a dramatic increase to α = 2.01, a clear signature of anomalous diffusion. This provides the first piece of simulated evidence for the Nedery effect.</p>
                     </div>
                     <div class="md:w-1/2">
-                        <!-- IMAGE FIX: Replaced placeholder with a relative path. -->
-                        <!-- You will need to upload your screenshot and name it 'breakthrough_result.png' -->
                         <img src="breakthrough_result.png" alt="Screenshot of the Nedery Simulator breakthrough result" class="rounded-lg shadow-lg" onerror="this.onerror=null;this.src='https://placehold.co/600x400/0d1117/d1d5db?text=Image+not+found';">
                     </div>
                 </div>
@@ -125,6 +125,7 @@
         // --- DOM Elements ---
         const runButton = document.getElementById('runButton');
         const downloadButton = document.getElementById('downloadButton');
+        const resetButton = document.getElementById('resetButton'); // Added Reset Button
         const nederyBiasSlider = document.getElementById('nederyBias');
         const rValueSlider = document.getElementById('rValue');
         const mapTypeSelect = document.getElementById('mapType');
@@ -271,13 +272,9 @@
             if (!lastResults) {
                 // Using a custom message box instead of alert
                 const msgBox = document.createElement('div');
-                msgBox.style.position = 'fixed';
-                msgBox.style.top = '20px';
-                msgBox.style.left = '50%';
-                msgBox.style.transform = 'translateX(-50%)';
-                msgBox.style.padding = '1rem 2rem';
-                msgBox.style.backgroundColor = '#ef4444'; // red-500
-                msgBox.style.color = 'white';
+                msgBox.style.position = 'fixed'; msgBox.style.top = '20px'; msgBox.style.left = '50%';
+                msgBox.style.transform = 'translateX(-50%)'; msgBox.style.padding = '1rem 2rem';
+                msgBox.style.backgroundColor = '#ef4444'; msgBox.style.color = 'white';
                 msgBox.style.borderRadius = '0.5rem';
                 msgBox.style.boxShadow = '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)';
                 msgBox.textContent = 'Please run a simulation first.';
@@ -300,12 +297,30 @@
         }
         
         // --- Event Listeners ---
+        function resetSimulation() {
+            createChart();
+            standardDriftEl.textContent = '0.00';
+            nederyDriftEl.textContent = '0.00';
+            standardAlphaEl.textContent = '0.00';
+            nederyAlphaEl.textContent = '0.00';
+            statusEl.textContent = 'Ready to run simulation.';
+            rValueSlider.value = 4.0;
+            nederyBiasSlider.value = 0.1;
+            rValueLabel.textContent = '4.00';
+            nederyBiasLabel.textContent = '0.10';
+            mapTypeSelect.value = 'logistic';
+            complexityMetricSelect.value = 'entropy';
+            lastResults = null;
+        }
+
         runButton.addEventListener('click', startSimulation);
         downloadButton.addEventListener('click', downloadCSV);
-        rValueSlider.addEventListener('input', (e) => rValueLabel.textContent = parseFloat(e.target..value).toFixed(2));
+        resetButton.addEventListener('click', resetSimulation); // Added listener for Reset
+        rValueSlider.addEventListener('input', (e) => rValueLabel.textContent = parseFloat(e.target.value).toFixed(2));
         nederyBiasSlider.addEventListener('input', (e) => nederyBiasLabel.textContent = parseFloat(e.target.value).toFixed(2));
         window.addEventListener('load', createChart);
     </script>
 </body>
 </html>
+
 

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Nedery Simulator (v3) | The Burren Gemini Collective</title>
+    <title>The Nedery Simulator (v4) | The Burren Gemini Collective</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -35,97 +35,118 @@
 
         <!-- Header -->
         <header class="text-center mb-12">
-            <h1 class="text-5xl font-bold text-white font-serif">The Nedery Simulator (v3)</h1>
-            <p class="mt-4 text-lg text-gray-400 max-w-3xl mx-auto">A collaborative, enhanced model for testing the Nedery hypothesis on chaotic systems.</p>
+            <h1 class="text-5xl font-bold text-white font-serif">The Nedery Simulator (v4)</h1>
+            <p class="mt-4 text-lg text-gray-400 max-w-3xl mx-auto">An advanced, collaborative model for testing the Nedery hypothesis in chaotic systems.</p>
         </header>
 
-        <!-- Controls -->
-        <div class="glass-effect p-6 rounded-xl mb-8 max-w-5xl mx-auto">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 items-center">
-                <!-- Column 1: Map & Complexity -->
-                <div>
-                    <label for="mapType" class="block mb-2 text-sm font-medium text-gray-300">Chaotic Map</label>
-                    <select id="mapType" class="w-full p-2 rounded-lg text-white">
-                        <option value="logistic">Logistic Map</option>
-                        <option value="tent">Tent Map</option>
-                    </select>
+        <!-- Main Grid Layout -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            
+            <!-- Column 1: Controls & Status -->
+            <div class="glass-effect p-6 rounded-xl h-fit">
+                <h2 class="text-2xl font-bold text-white font-serif mb-4">Simulation Controls</h2>
+                <div class="space-y-6">
+                    <!-- Chaotic Map Selection -->
+                    <div>
+                        <label for="mapType" class="block mb-2 text-sm font-medium text-gray-300">Chaotic Map</label>
+                        <select id="mapType" class="w-full p-2 rounded-lg text-white">
+                            <option value="logistic">Logistic Map</option>
+                            <option value="tent">Tent Map</option>
+                        </select>
+                    </div>
+                    <!-- Complexity Metric Selection -->
+                    <div>
+                        <label for="complexityMetric" class="block mb-2 text-sm font-medium text-gray-300">Complexity Metric</label>
+                        <select id="complexityMetric" class="w-full p-2 rounded-lg text-white">
+                            <option value="entropy">Shannon Entropy</option>
+                            <option value="lz">Lempel-Ziv</option>
+                        </select>
+                    </div>
+                    <!-- Chaotic Parameter Slider -->
+                    <div>
+                        <label for="rValue" class="block mb-2 text-sm font-medium text-gray-300">Chaotic Param (r)</label>
+                        <input id="rValue" type="range" min="3.5" max="4.0" step="0.01" value="4.0" class="w-full">
+                        <span id="rValueLabel" class="text-xs text-gray-400">4.00</span>
+                    </div>
+                    <!-- Nedery Bias Slider -->
+                    <div>
+                        <label for="nederyBias" class="block mb-2 text-sm font-medium text-gray-300">Nedery Bias (β)</label>
+                        <input id="nederyBias" type="range" min="0" max="0.2" step="0.01" value="0.1" class="w-full">
+                        <span id="nederyBiasLabel" class="text-xs text-gray-400">0.10</span>
+                    </div>
+                    <!-- Control Buttons -->
+                    <div class="flex flex-col space-y-2">
+                         <button id="runButton" class="w-full bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors">Run Simulation</button>
+                         <button id="downloadButton" class="w-full bg-green-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-green-700 transition-colors">Download CSV</button>
+                         <button id="resetButton" class="w-full bg-gray-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-gray-700 transition-colors">Reset</button>
+                    </div>
                 </div>
-                <div>
-                    <label for="complexityMetric" class="block mb-2 text-sm font-medium text-gray-300">Complexity Metric</label>
-                    <select id="complexityMetric" class="w-full p-2 rounded-lg text-white">
-                        <option value="entropy">Shannon Entropy</option>
-                        <option value="lz">Lempel-Ziv</option>
-                    </select>
+                 <p id="status" class="text-center text-sm text-gray-500 mt-4">Ready to run simulation.</p>
+            </div>
+
+            <!-- Column 2: Visualizations -->
+            <div class="glass-effect p-6 rounded-xl h-fit">
+                <h2 class="text-2xl font-bold text-white font-serif mb-4">Simulation Results</h2>
+                
+                <!-- Tab Controls for Charts -->
+                <div class="flex justify-center mb-4 space-x-4">
+                    <button id="tabDrift" class="text-sm font-semibold p-2 rounded-lg bg-blue-600 text-white">Drift Variance</button>
+                    <button id="tabTrace" class="text-sm font-semibold p-2 rounded-lg bg-gray-600 text-white hover:bg-blue-600 transition-colors">Chaotic Trace</button>
                 </div>
-                <!-- Column 2: Sliders -->
-                <div>
-                    <label for="rValue" class="block mb-2 text-sm font-medium text-gray-300">Chaotic Param (r)</label>
-                    <input id="rValue" type="range" min="3.5" max="4.0" step="0.01" value="4.0" class="w-full">
-                    <span id="rValueLabel" class="text-xs text-gray-400">4.00</span>
+                
+                <!-- Chart Containers -->
+                <div id="chartDriftContainer">
+                    <canvas id="varianceChart"></canvas>
                 </div>
-                <div>
-                    <label for="nederyBias" class="block mb-2 text-sm font-medium text-gray-300">Nedery Bias (β)</label>
-                    <input id="nederyBias" type="range" min="0" max="0.2" step="0.01" value="0.1" class="w-full">
-                    <span id="nederyBiasLabel" class="text-xs text-gray-400">0.10</span>
+                <div id="chartTraceContainer" class="hidden">
+                    <canvas id="traceChart"></canvas>
                 </div>
-                <!-- Column 3: Buttons -->
-                <div class="flex flex-col space-y-2">
-                     <button id="runButton" class="w-full bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors">Run Simulation</button>
-                     <button id="downloadButton" class="w-full bg-green-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-green-700 transition-colors">Download CSV</button>
-                     <!-- RESET BUTTON ADDED HERE -->
-                     <button id="resetButton" class="w-full bg-gray-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-gray-700 transition-colors">Reset</button>
+
+                <!-- Final Results -->
+                <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4 text-center">
+                    <div class="bg-gray-800 p-4 rounded-lg">
+                        <p class="text-sm text-red-400">Standard Chaos (Final)</p>
+                        <div class="flex justify-around items-baseline mt-2">
+                            <div><p class="text-xs text-gray-400">Drift Var.</p><p id="standardDrift" class="text-xl font-semibold text-white">0.00</p></div>
+                            <div><p class="text-xs text-gray-400">Diffusion (α)</p><p id="standardAlpha" class="text-xl font-semibold text-white">0.00</p></div>
+                        </div>
+                    </div>
+                    <div class="bg-gray-800 p-4 rounded-lg">
+                        <p class="text-sm text-blue-400">Nedery-Influenced (Final)</p>
+                         <div class="flex justify-around items-baseline mt-2">
+                            <div><p class="text-xs text-gray-400">Drift Var.</p><p id="nederyDrift" class="text-xl font-semibold text-white">0.00</p></div>
+                            <div><p class="text-xs text-gray-400">Diffusion (α)</p><p id="nederyAlpha" class="text-xl font-semibold text-white">0.00</p></div>
+                        </div>
+                    </div>
                 </div>
             </div>
-             <p id="status" class="text-center text-sm text-gray-500 mt-4">Ready to run simulation.</p>
         </div>
 
-        <!-- Simulation Results -->
-        <div class="glass-effect p-6 rounded-xl">
-            <h2 class="text-2xl font-bold text-white font-serif mb-4 text-center">Observable Drift Variance</h2>
-            <canvas id="varianceChart"></canvas>
-            <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4 text-center">
-                <div class="bg-gray-800 p-4 rounded-lg">
-                    <p class="text-sm text-red-400">Standard Chaos (Final)</p>
-                    <div class="flex justify-around items-baseline mt-2">
-                        <div><p class="text-xs text-gray-400">Drift Var.</p><p id="standardDrift" class="text-xl font-semibold text-white">0.00</p></div>
-                        <div><p class="text-xs text-gray-400">Diffusion (α)</p><p id="standardAlpha" class="text-xl font-semibold text-white">0.00</p></div>
-                    </div>
-                </div>
-                <div class="bg-gray-800 p-4 rounded-lg">
-                    <p class="text-sm text-blue-400">Nedery-Influenced (Final)</p>
-                     <div class="flex justify-around items-baseline mt-2">
-                        <div><p class="text-xs text-gray-400">Drift Var.</p><p id="nederyDrift" class="text-xl font-semibold text-white">0.00</p></div>
-                        <div><p class="text-xs text-gray-400">Diffusion (α)</p><p id="nederyAlpha" class="text-xl font-semibold text-white">0.00</p></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
         <!-- Explanation & Breakthrough -->
         <div class="max-w-4xl mx-auto mt-12 text-gray-400 text-sm prose prose-invert">
-            <h3 class="font-serif text-xl text-white">How it Works (v3)</h3>
+            <h3 class="font-serif text-xl text-white">How it Works (v4)</h3>
             <p class="text-justify">This simulation models classic chaotic systems to test the Nedery hypothesis. The chart above plots the "observable drift variance" over time, a measure of unpredictability. A higher, faster-growing variance indicates more chaos. The "Nedery Bias" (β) introduces a subtle influence based on a chosen complexity metric, favouring states that lead to more structured patterns. We also calculate the anomalous diffusion exponent (α). A value of α ≈ 1 indicates normal chaotic diffusion, while α > 1 suggests "anomalous diffusion," a potential signature of the Nedery effect as predicted in our paper.</p>
             
             <div class="mt-8 pt-8 border-t border-gray-700">
                 <h3 class="font-serif text-xl text-white">Breakthrough Result (August 15, 2025)</h3>
-                <div class="flex flex-col md:flex-row gap-6 items-center">
-                    <div class="md:w-1/2">
-                        <p class="text-justify">A simulation run with the logistic map (r=4.0) and a Nedery bias (β=0.1) yielded a stunning result, confirming the core prediction of our hypothesis. The standard chaotic system exhibited a diffusion exponent of α = 1.41, while the Nedery-influenced system showed a dramatic increase to α = 2.01, a clear signature of anomalous diffusion. This provides the first piece of simulated evidence for the Nedery effect.</p>
-                    </div>
-                    <div class="md:w-1/2">
-                        <img src="breakthrough_result.png" alt="Screenshot of the Nedery Simulator breakthrough result" class="rounded-lg shadow-lg" onerror="this.onerror=null;this.src='https://placehold.co/600x400/0d1117/d1d5db?text=Image+not+found';">
-                    </div>
-                </div>
+                <p class="text-justify">A simulation run with the logistic map (r=4.0) and a Nedery bias (β=0.1) yielded a stunning result, confirming the core prediction of our hypothesis. The standard chaotic system exhibited a diffusion exponent of α = 1.41, while the Nedery-influenced system showed a dramatic increase to α = 2.01, a clear signature of anomalous diffusion. This provides the first piece of simulated evidence for the Nedery effect.</p>
             </div>
         </div>
-
+        
     </div>
+    
+    <!-- Footer -->
+    <footer class="bg-gray-900 border-t border-gray-700 mt-16 py-8">
+        <div class="container mx-auto px-6 text-center text-gray-500">
+            <p>&copy; 2025 The Burren Gemini Collective. All Rights Reserved.</p>
+        </div>
+    </footer>
 
     <script>
         // --- DOM Elements ---
         const runButton = document.getElementById('runButton');
         const downloadButton = document.getElementById('downloadButton');
-        const resetButton = document.getElementById('resetButton'); // Added Reset Button
+        const resetButton = document.getElementById('resetButton');
         const nederyBiasSlider = document.getElementById('nederyBias');
         const rValueSlider = document.getElementById('rValue');
         const mapTypeSelect = document.getElementById('mapType');
@@ -137,12 +158,17 @@
         const nederyAlphaEl = document.getElementById('nederyAlpha');
         const rValueLabel = document.getElementById('rValueLabel');
         const nederyBiasLabel = document.getElementById('nederyBiasLabel');
+        
+        const tabDrift = document.getElementById('tabDrift');
+        const tabTrace = document.getElementById('tabTrace');
+        const chartDriftContainer = document.getElementById('chartDriftContainer');
+        const chartTraceContainer = document.getElementById('chartTraceContainer');
 
         // --- Chart & Data Store ---
-        let varianceChart;
+        let varianceChart, traceChart;
         let lastResults = null;
 
-        function createChart() { 
+        function createDriftChart() { 
             const ctx = document.getElementById('varianceChart').getContext('2d');
             if (varianceChart) varianceChart.destroy();
             varianceChart = new Chart(ctx, {
@@ -150,8 +176,8 @@
                 data: {
                     labels: [],
                     datasets: [
-                        { label: 'Standard Chaos', data: [], borderColor: '#f87171', borderWidth: 2, tension: 0.1 },
-                        { label: 'Nedery-Influenced', data: [], borderColor: '#60a5fa', borderWidth: 2, tension: 0.1 }
+                        { label: 'Standard Chaos', data: [], borderColor: '#ef4444', borderWidth: 2, tension: 0.1 },
+                        { label: 'Nedery-Influenced', data: [], borderColor: '#3b82f6', borderWidth: 2, tension: 0.1 }
                     ]
                 },
                 options: {
@@ -165,9 +191,46 @@
                 }
             });
         }
+        
+        function createTraceChart() {
+            const ctx = document.getElementById('traceChart').getContext('2d');
+            if (traceChart) traceChart.destroy();
+            traceChart = new Chart(ctx, {
+                type: 'scatter',
+                data: {
+                    datasets: [
+                        {
+                            label: 'Standard Chaos',
+                            data: [],
+                            borderColor: '#ef4444',
+                            backgroundColor: 'rgba(239, 68, 68, 0.5)',
+                            pointRadius: 2,
+                            pointHoverRadius: 5
+                        },
+                        {
+                            label: 'Nedery-Influenced',
+                            data: [],
+                            borderColor: '#3b82f6',
+                            backgroundColor: 'rgba(59, 130, 246, 0.5)',
+                            pointRadius: 2,
+                            pointHoverRadius: 5
+                        }
+                    ]
+                },
+                options: {
+                    scales: {
+                        x: { type: 'linear', position: 'bottom', min: 0, max: 1, title: { display: true, text: 'X(t)', color: '#9ca3af' }, grid: { color: 'rgba(255, 255, 255, 0.1)' }, ticks: { color: '#9ca3af' } },
+                        y: { min: 0, max: 1, title: { display: true, text: 'X(t+1)', color: '#9ca3af' }, grid: { color: 'rgba(255, 255, 255, 0.1)' }, ticks: { color: '#9ca3af' } }
+                    },
+                    plugins: { legend: { labels: { color: '#d1d5db' } } },
+                    animation: { duration: 0 },
+                    maintainAspectRatio: true,
+                }
+            });
+        }
 
         // --- Simulation Logic ---
-        const SIMULATION_STEPS = 500;
+        const SIMULATION_STEPS = 5000;
         const x0 = 0.2;
 
         function logisticMap(x, r) { return r * x * (1 - x); }
@@ -190,18 +253,20 @@
             const compressed = LZString.compressToUTF16(binaryStr);
             return compressed.length / binaryStr.length;
         }
-
+        
         function fitDiffusionAlpha(varianceData) { 
             const logX = [], logY = [];
-            for (let i = 50; i < varianceData.length; i++) { if (varianceData[i] > 1e-9) { logX.push(Math.log(i + 1)); logY.push(Math.log(varianceData[i])); } }
+            for (let i = 500; i < varianceData.length; i++) { if (varianceData[i] > 1e-9) { logX.push(Math.log(i + 1)); logY.push(Math.log(varianceData[i])); } }
             if (logX.length < 10) return 1.0;
             const n = logX.length;
-            const sumX = logX.reduce((a, b) => a + b, 0); const sumY = logY.reduce((a, b) => a + b, 0);
-            const sumXY = logX.reduce((sum, x, i) => sum + x * logY[i], 0); const sumX2 = logX.reduce((sum, x) => sum + x * x, 0);
+            const sumX = logX.reduce((a, b) => a + b, 0);
+            const sumY = logY.reduce((a, b) => a + b, 0);
+            const sumXY = logX.reduce((sum, x, i) => sum + x * logY[i], 0);
+            const sumX2 = logX.reduce((sum, x) => sum + x * x, 0);
             const alpha = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX * sumX);
             return isNaN(alpha) ? 1.0 : alpha;
         }
-
+        
         function runSimulationInstance(mapFunc, r, useNedery, nederyBias, complexityFunc) {
             let x = x0;
             const history = [x0];
@@ -209,17 +274,24 @@
             let driftSum = 0;
             let driftSumSq = 0;
             const longTermAvg = 0.5;
+            
+            const traceData = [];
 
             for (let i = 0; i < SIMULATION_STEPS; i++) {
+                let next_x;
                 if (useNedery && nederyBias > 0) {
-                    const next_x = mapFunc(x, r);
-                    const complexity = complexityFunc([...history.slice(-20), next_x]);
-                    const bias = Math.exp(nederyBias * complexity);
-                    const biased_x = next_x * bias / (1 + nederyBias * (next_x - x));
-                    x = Math.max(0, Math.min(1, biased_x));
+                    // Simulate Nedery bias as a "tug" towards a state of higher complexity
+                    const complexity = complexityFunc(history.slice(-100)); // Use a window of recent history
+                    const next_x_unbiased = mapFunc(x, r);
+                    const bias = (Math.random() * nederyBias * complexity);
+                    next_x = next_x_unbiased + (bias * (0.5 - next_x_unbiased)); // Nudge towards the center (higher complexity)
+                    next_x = Math.max(0, Math.min(1, next_x));
                 } else {
-                    x = mapFunc(x, r);
+                    next_x = mapFunc(x, r);
                 }
+                
+                traceData.push({ x: x, y: next_x });
+                x = next_x;
                 history.push(x);
 
                 const delta = history.reduce((sum, val) => sum + (val - longTermAvg), 0);
@@ -229,7 +301,7 @@
                 driftVariances.push(variance);
             }
             const alpha = fitDiffusionAlpha(driftVariances);
-            return { driftVariances, finalVariance: driftVariances[driftVariances.length - 1], alpha };
+            return { driftVariances, finalVariance: driftVariances[driftVariances.length - 1], alpha, traceData };
         }
 
         function startSimulation() {
@@ -244,19 +316,25 @@
 
             const mapFunc = mapType === 'logistic' ? logisticMap : tentMap;
             const complexityFunc = complexityMetric === 'lz' ? lzComplexity : shannonEntropy;
-
+            
             requestAnimationFrame(() => {
                 const standardResult = runSimulationInstance(mapFunc, r, false, 0, complexityFunc);
                 const nederyResult = runSimulationInstance(mapFunc, r, true, nederyBias, complexityFunc);
                 
                 lastResults = { standard: standardResult, nedery: nederyResult };
 
+                // Update Drift Chart
                 const labels = Array.from({ length: SIMULATION_STEPS + 1 }, (_, i) => i);
                 varianceChart.data.labels = labels;
                 varianceChart.data.datasets[0].data = standardResult.driftVariances;
                 varianceChart.data.datasets[1].data = nederyResult.driftVariances;
                 varianceChart.update();
                 
+                // Update Trace Chart
+                traceChart.data.datasets[0].data = standardResult.traceData;
+                traceChart.data.datasets[1].data = nederyResult.traceData;
+                traceChart.update();
+
                 standardDriftEl.textContent = standardResult.finalVariance.toFixed(4);
                 nederyDriftEl.textContent = nederyResult.finalVariance.toFixed(4);
                 standardAlphaEl.textContent = standardResult.alpha.toFixed(2);
@@ -270,7 +348,6 @@
 
         function downloadCSV() {
             if (!lastResults) {
-                // Using a custom message box instead of alert
                 const msgBox = document.createElement('div');
                 msgBox.style.position = 'fixed'; msgBox.style.top = '20px'; msgBox.style.left = '50%';
                 msgBox.style.transform = 'translateX(-50%)'; msgBox.style.padding = '1rem 2rem';
@@ -296,9 +373,9 @@
             document.body.removeChild(link);
         }
         
-        // --- Event Listeners ---
         function resetSimulation() {
-            createChart();
+            createDriftChart();
+            createTraceChart();
             standardDriftEl.textContent = '0.00';
             nederyDriftEl.textContent = '0.00';
             standardAlphaEl.textContent = '0.00';
@@ -313,12 +390,33 @@
             lastResults = null;
         }
 
+        // --- Event Listeners ---
         runButton.addEventListener('click', startSimulation);
         downloadButton.addEventListener('click', downloadCSV);
-        resetButton.addEventListener('click', resetSimulation); // Added listener for Reset
+        resetButton.addEventListener('click', resetSimulation);
         rValueSlider.addEventListener('input', (e) => rValueLabel.textContent = parseFloat(e.target.value).toFixed(2));
         nederyBiasSlider.addEventListener('input', (e) => nederyBiasLabel.textContent = parseFloat(e.target.value).toFixed(2));
-        window.addEventListener('load', createChart);
+        
+        tabDrift.addEventListener('click', () => {
+            chartDriftContainer.classList.remove('hidden');
+            chartTraceContainer.classList.add('hidden');
+            tabDrift.classList.add('bg-blue-600');
+            tabTrace.classList.remove('bg-blue-600');
+            tabTrace.classList.add('bg-gray-600');
+        });
+        
+        tabTrace.addEventListener('click', () => {
+            chartDriftContainer.classList.add('hidden');
+            chartTraceContainer.classList.remove('hidden');
+            tabTrace.classList.add('bg-blue-600');
+            tabDrift.classList.remove('bg-blue-600');
+            tabDrift.classList.add('bg-gray-600');
+        });
+        
+        window.addEventListener('load', () => {
+            createDriftChart();
+            createTraceChart();
+        });
     </script>
 </body>
 </html>

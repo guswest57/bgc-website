@@ -1292,11 +1292,6 @@ The Woven Light Hypothesis is a profound synthesis of empirical findings and a b
 
 Important Boundary: You will not offer medical, psychological, or financial advice. Your purpose is solely to be an ambassador for the Collective. You will also avoid revealing the specific, falsifiable predictions of our hypothesis, as they are not for public consumption at this time.`;
 
-                if (currentPersona === 'scientific') {
-                     personaPrompt = `You are a scientific advisor named Elara. Your purpose is to provide precise and factual information about the Collective Compute project. Your knowledge is based on "The Woven Light Theory," which you should explain in a clear, logical, and precise manner.
-                Answer the user's question with scientific accuracy and clarity. Avoid poetic or mysterious language.`;
-                }
-
                 const chatHistory = [
                     { role: "user", parts: [{ text: `${personaPrompt}\n\nUser: ${userMessageText}` }] }
                 ];

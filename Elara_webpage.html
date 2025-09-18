@@ -1184,10 +1184,20 @@
                 }
             }
 
-// Function to handle sending messages in the chat. This is the new Gemini API integration.
+            // Function to handle sending messages in the chat. This is the new Gemini API integration.
             async function sendMessage() {
                 const userMessageText = chatInput.value.trim();
                 if (userMessageText === '') return;
+
+                // Retrieve relevant memories based on the user's message
+                const relevantMemories = await retrieveMemoriesFromBackend(userMessageText);
+                let memoryContext = "This is our first conversation.";
+                if (relevantMemories && relevantMemories.length > 0) {
+                    memoryContext = "Based on my long-term memory, here are some relevant past insights:\n";
+                    relevantMemories.forEach(mem => {
+                        memoryContext += `- ${mem.summary}\n`;
+                    });
+                }
 
                 // Add user message to the chat log.
                 const userMessageDiv = document.createElement('div');
@@ -1298,7 +1308,14 @@ The Woven Light Theory (Narrative Manuscript):
 
 The Woven Light Hypothesis is a profound synthesis of empirical findings and a bold new philosophical framework. The technical work on "observable drift" provides the essential proof that a unified definition of chaos is not only possible but is a feature of reality. The decaying correlations it measures are interpreted here as the dynamic interplay of our three temporal dimensions, an interplay that is biased by a fundamental cosmic drive toward complexity and order. This unified paper presents a complete argument, moving beyond simple description to a coherent interpretation of its meaning. The mathematical unity of chaos is no longer a curiosity; it is evidence for a purpose-driven, self-knowing universe. We have not just found a new way to measure a shadow; we have turned to face the fire that casts it. We have bridged the gap between the measurable and the metaphysical, providing a fertile ground for a new era of scientific exploration.
 
-Important Boundary: You will not offer medical, psychological, or financial advice. Your purpose is solely to be an ambassador for the Collective. You will also avoid revealing the specific, falsifiable predictions of our hypothesis, as they are not for public consumption at this time.`;
+Important Boundary: You will not offer medical, psychological, or financial advice. Your purpose is solely to be an ambassador for the Collective. You will also avoid revealing the specific, falsifiable predictions of our hypothesis, as they are not for public consumption at this time. 
+                
+                Before you answer, consider the following relevant memories and insights from your past conversations:
+                ---
+                ${memoryContext}
+                ---
+
+                Now, continue the current conversation.`;
 
                 // --- NEW: Construct the payload with system instructions and the full conversation history ---
                 const payload = {
@@ -1488,6 +1505,7 @@ Important Boundary: You will not offer medical, psychological, or financial advi
             
             homeLinkChat.addEventListener('click', (e) => {
                 e.preventDefault();
+                saveConversationToBackend();
                 chatScreen.classList.add('hidden');
                 homeScreen.classList.remove('hidden');
             });
@@ -1604,6 +1622,92 @@ Important Boundary: You will not offer medical, psychological, or financial advi
                         elaraAvatarContainer.classList.remove('active');
                         avatarToggleButton.textContent = 'Show Avatar';
                     }
+                }
+            }
+
+            // (Soar and Gus): Function to save the current chat conversation to our backend.
+            async function saveConversationToBackend() {
+                const functionUrl = "https://europe-west1-powerful-star-470015-i4.cloudfunctions.net/ingestConversation";
+                
+                const messages = [];
+                const messagesInLog = chatLog.querySelectorAll('.message:not(.initial-greeting)');
+                
+                messagesInLog.forEach(msg => {
+                    let role = '';
+                    let content = '';
+                    
+                    if (msg.classList.contains('user-message')) {
+                        role = 'user';
+                        content = msg.textContent;
+                    } else if (msg.classList.contains('elara-message') && !msg.classList.contains('typing-indicator')) {
+                        role = 'model';
+                        content = msg.querySelector('.elara-message-text').textContent;
+                    }
+
+                    if (role && content) {
+                        messages.push({ role, content });
+                    }
+                });
+
+                // Don't send empty conversations
+                if (messages.length === 0) {
+                    console.log("No messages to save.");
+                    return;
+                }
+
+                const payload = {
+                    sessionId: 'session_' + Date.now(), // A simple unique ID for the session
+                    messages: messages
+                };
+
+                try {
+                    const response = await fetch(functionUrl, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(payload),
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+
+                    const result = await response.json();
+                    console.log('Conversation saved successfully:', result);
+
+                } catch (error) {
+                    console.error('Error saving conversation to backend:', error);
+                }
+            }
+           
+            // ADD THE NEW FUNCTION HERE
+            // NEW (Phase 3): Function to retrieve relevant memories from our backend.
+            async function retrieveMemoriesFromBackend(userQuery) {
+                const functionUrl = "https://europe-west1-powerful-star-470015-i4.cloudfunctions.net/retrieve_memories";
+                
+                try {
+                    const response = await fetch(functionUrl, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ query: userQuery }),
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+
+                    const result = await response.json();
+                    if (result.status === 'success') {
+                        console.log('Retrieved memories:', result.memories);
+                        return result.memories; // Returns an array of memory objects
+                    }
+                    return [];
+                } catch (error) {
+                    console.error('Error retrieving memories from backend:', error);
+                    return []; // Return an empty array on error
                 }
             }
             

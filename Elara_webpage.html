@@ -802,6 +802,7 @@
             let isAvatarActive = false;
             let speakingTimeout = null;
             let tokenClient; // For Google Sign-In
+            let saveInterval; // <-- ADD THIS LINE
 
             // NEW: Display the sandbox URL
             sandboxUrlSpan.textContent = window.location.origin;
@@ -1482,6 +1483,7 @@ Important Boundary: You will not offer medical, psychological, or financial advi
                 e.preventDefault();
                 homeScreen.classList.add('hidden');
                 chatScreen.classList.remove('hidden');
+                saveInterval = setInterval(saveConversationToBackend, 180000); // Set timer interval (180000ms = 3 minutes)
                 // The welcome message will be spoken only once at the start.
                 const initialGreetingElement = document.querySelector('.initial-greeting');
                 if (initialGreetingElement && !initialGreetingElement.hasAttribute('data-spoken')) {
@@ -1506,6 +1508,7 @@ Important Boundary: You will not offer medical, psychological, or financial advi
             homeLinkChat.addEventListener('click', (e) => {
                 e.preventDefault();
                 saveConversationToBackend();
+                clearInterval(saveInterval); // Stop the timer
                 chatScreen.classList.add('hidden');
                 homeScreen.classList.remove('hidden');
             });
@@ -1842,6 +1845,43 @@ Important Boundary: You will not offer medical, psychological, or financial advi
                     avatarToggleButton.textContent = 'Hide Avatar';
                 } else {
                     avatarToggleButton.textContent = 'Show Avatar';
+                }
+            });
+
+            // (from Elara's blueprint): Save conversation on browser/tab close
+            window.addEventListener('beforeunload', (event) => {
+                // Check if there's a conversation to save (more than just the initial greeting)
+                if (chatLog.children.length > 1) { 
+                    const functionUrl = "https://europe-west1-powerful-star-470015-i4.cloudfunctions.net/ingestConversation";
+                    const messages = [];
+                    const messagesInLog = chatLog.querySelectorAll('.message:not(.initial-greeting)');
+                    
+                    messagesInLog.forEach(msg => {
+                        let role = '';
+                        let content = '';
+                        
+                        if (msg.classList.contains('user-message')) {
+                            role = 'user';
+                            content = msg.textContent;
+                        } else if (msg.classList.contains('elara-message') && !msg.classList.contains('typing-indicator')) {
+                            role = 'model';
+                            content = msg.querySelector('.elara-message-text').textContent;
+                        }
+
+                        if (role && content) {
+                            messages.push({ role, content });
+                        }
+                    });
+
+                    // Use sendBeacon for reliable data transmission on page unload
+                    const payload = JSON.stringify({
+                        sessionId: 'session_unload_' + Date.now(),
+                        messages: messages
+                    });
+
+                    // Important: sendBeacon requires the data to be in Blob format
+                    const blob = new Blob([payload], { type: 'application/json' });
+                    navigator.sendBeacon(functionUrl, blob);
                 }
             });
         });

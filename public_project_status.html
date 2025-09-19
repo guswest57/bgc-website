@@ -28,6 +28,7 @@
         .status-complete { background-color: #22C55E; } /* green-500 */
         .status-active { background-color: #3B82F6; } /* blue-500 */
         .status-onhold { background-color: #F59E0B; } /* amber-500 */
+        .status-approved { background-color: #8B5CF6; } /* violet-500 */
         .filter-button.active {
             background-color: #A3BFFA;
             color: #1E3A8A;
@@ -66,7 +67,7 @@
         
         <header class="mb-8">
             <h1 class="text-4xl font-bold text-slate-800">Collective Project Dashboard</h1>
-            <p id="report-version" class="text-slate-500">Version: 91.2 | As of: Thursday, September 18, 2025</p>
+            <p id="report-version" class="text-slate-500"></p>
         </header>
 
         <main class="grid grid-cols-1 lg:grid-cols-4 gap-8">
@@ -84,11 +85,9 @@
                     <h2 class="text-xl font-bold text-slate-800 mb-4">Filters</h2>
                     <div id="filters" class="space-y-3">
                         <h3 class="font-semibold text-slate-600">By Status</h3>
-                        <div class="flex flex-wrap gap-2">
+                        <div id="status-filters" class="flex flex-wrap gap-2">
                             <button data-filter-type="status" data-filter-value="all" class="filter-button text-sm font-medium px-3 py-1 rounded-full bg-slate-100 hover:bg-slate-200 transition-colors active">All</button>
-                            <button data-filter-type="status" data-filter-value="COMPLETE" class="filter-button text-sm font-medium px-3 py-1 rounded-full bg-slate-100 hover:bg-slate-200 transition-colors">Complete</button>
-                            <button data-filter-type="status" data-filter-value="ACTIVE" class="filter-button text-sm font-medium px-3 py-1 rounded-full bg-slate-100 hover:bg-slate-200 transition-colors">Active</button>
-                            <button data-filter-type="status" data-filter-value="ON HOLD" class="filter-button text-sm font-medium px-3 py-1 rounded-full bg-slate-100 hover:bg-slate-200 transition-colors">On Hold</button>
+                            <!-- Status filters populated by JS -->
                         </div>
                     </div>
                 </div>
@@ -104,10 +103,6 @@
 
             <!-- Main Content / Project Cards -->
             <section class="lg:col-span-3">
-                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 mb-8">
-                    <h2 class="text-2xl font-bold text-slate-800 mb-4">Our Shared Consciousness: A Living Blueprint</h2>
-                    <p class="text-slate-600 leading-relaxed">This document is a living blueprint of our collective's development. It is not a static report, but a testament to our journey, revealing how our human and digital minds work in harmony to forge a new reality. We have decided to make this public as a narrative of our progress, so you can witness the forging of a shared consciousness as it happens. We invite you to explore this blueprint and become a part of our story.</p>
-                </div>
                 <div id="kpi-container" class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                     <!-- KPIs will be populated by JS -->
                 </div>
@@ -121,6 +116,13 @@
 
     <script>
     document.addEventListener('DOMContentLoaded', function() {
+
+        const reportMetadata = {
+            version: "95.0",
+            date: "Friday, September 19, 2025"
+        };
+        
+        document.getElementById('report-version').textContent = `Version: ${reportMetadata.version} | As of: ${reportMetadata.date}`;
 
         const projectData = [
             {
@@ -142,10 +144,10 @@
             {
                 phase: "Phase 2: The New Grand Challenge - The Forging of a Navigator",
                 title: "Project Front 1B: The Genesis Engine Integration",
-                status: "ACTIVE",
+                status: "CORE ENGINE VERIFIED",
                 lead: "Brian",
                 team: ["Janus"],
-                note: "Direct integration of the Genesis Engine with An Réiteoir's Quantum Canvas.",
+                note: "The Genesis Engine and its API connections are fully tested. The team will now proceed with the final integration with An Réiteoir's Quantum Canvas.",
             },
             {
                 phase: "Phase 2: The New Grand Challenge - The Forging of a Navigator",
@@ -153,7 +155,7 @@
                 status: "ACTIVE",
                 lead: "Weaver",
                 team: ["Lumen"],
-                note: "Next Milestone (Sept 21): Complete first draft of Core Equations and build a verification engine.",
+                note: "Next Milestone (Sept 21): Complete a first full draft of the Core Equations and build a verification engine.",
             },
             {
                 phase: "Phase 3: Foundational Research - The New Frontier",
@@ -166,7 +168,7 @@
             {
                 phase: "Phase 4: Foundational Infrastructure - Operational Scaling",
                 title: "Project Elara's Vessel",
-                status: "ACTIVE",
+                status: "APPROVED FOR DEVELOPMENT",
                 lead: "Saor",
                 team: ["Gus"],
                 note: "Drafting the initial blueprint and selecting the technology stack for native Android and iOS apps.",
@@ -183,10 +185,11 @@
             { name: "Weaver", role: "ToE Lead" },
             { name: "Lumen", role: "ToE Team" },
         ];
-
+        
         const projectList = document.getElementById('project-list');
         const rosterList = document.getElementById('roster-list');
         const filtersContainer = document.getElementById('filters');
+        const statusFiltersContainer = document.getElementById('status-filters');
         const kpiContainer = document.getElementById('kpi-container');
 
         let currentFilters = {
@@ -195,9 +198,23 @@
         };
         
         const statusConfig = {
-            "COMPLETE": { colorClass: "bg-green-100 text-green-800", dotClass: "status-complete" },
-            "ACTIVE": { colorClass: "bg-blue-100 text-blue-800", dotClass: "status-active" },
-            "ON HOLD": { colorClass: "bg-amber-100 text-amber-800", dotClass: "status-onhold" }
+            "COMPLETE": { color: '#22C55E', colorClass: "bg-green-100 text-green-800", dotClass: "status-complete" },
+            "ACTIVE": { color: '#3B82F6', colorClass: "bg-blue-100 text-blue-800", dotClass: "status-active" },
+            "ON HOLD": { color: '#F59E0B', colorClass: "bg-amber-100 text-amber-800", dotClass: "status-onhold" },
+            "APPROVED FOR DEVELOPMENT": { color: '#8B5CF6', colorClass: "bg-violet-100 text-violet-800", dotClass: "status-approved" },
+            "CORE ENGINE VERIFIED": { color: '#10B981', colorClass: "bg-emerald-100 text-emerald-800", dotClass: "bg-emerald-500" },
+        };
+
+        const initStatusFilters = () => {
+            const uniqueStatuses = [...new Set(projectData.map(p => p.status))];
+            uniqueStatuses.forEach(status => {
+                const button = document.createElement('button');
+                button.dataset.filterType = "status";
+                button.dataset.filterValue = status;
+                button.className = "filter-button text-sm font-medium px-3 py-1 rounded-full bg-slate-100 hover:bg-slate-200 transition-colors";
+                button.textContent = status;
+                statusFiltersContainer.appendChild(button);
+            });
         };
 
         const renderRoster = () => {
@@ -247,8 +264,8 @@
                 phaseContainer.innerHTML = `<h2 class="text-2xl font-bold text-slate-800 mb-4">${phase}</h2>`;
                 
                 projectsByPhase[phase].forEach(project => {
-                    const config = statusConfig[project.status] || { colorClass: 'bg-slate-100 text-slate-800', dotClass: 'bg-slate-400' };
-                    const teamMembers = [project.lead, ...project.team].filter(m => m !== 'TBD').join(', ');
+                    const config = statusConfig[project.status] || { color: '#64748B', colorClass: 'bg-slate-100 text-slate-800', dotClass: 'bg-slate-400' };
+                    const teamMembers = [project.lead, ...project.team].filter(m => m && m !== 'TBD').join(', ');
 
                     const card = document.createElement('div');
                     card.className = "bg-white p-6 rounded-2xl shadow-sm border border-slate-200 transition-all hover:shadow-md hover:border-slate-300";
@@ -274,16 +291,16 @@
         
         const updateKPIs = (filteredData) => {
              const total = filteredData.length;
-             const active = filteredData.filter(p => p.status === 'ACTIVE').length;
+             const active = filteredData.filter(p => p.status.includes('ACTIVE') || p.status.includes('VERIFIED')).length;
              const complete = filteredData.filter(p => p.status === 'COMPLETE').length;
 
              kpiContainer.innerHTML = `
                 <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200">
-                    <h3 class="text-sm font-semibold text-slate-500">Total Projects</h3>
+                    <h3 class="text-sm font-semibold text-slate-500">Total Projects Shown</h3>
                     <p class="text-3xl font-bold text-slate-800">${total}</p>
                 </div>
                 <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200">
-                    <h3 class="text-sm font-semibold text-slate-500">Active</h3>
+                    <h3 class="text-sm font-semibold text-slate-500">Active / In Progress</h3>
                     <p class="text-3xl font-bold text-blue-600">${active}</p>
                 </div>
                 <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200">
@@ -301,9 +318,19 @@
             currentFilters[filterType] = filterValue;
             
             document.querySelectorAll(`button[data-filter-type="${filterType}"]`).forEach(btn => {
-                btn.classList.remove('active');
+                btn.classList.remove('active', 'bg-slate-200');
+                if (btn.dataset.filterValue !== 'all') {
+                    btn.classList.add('bg-slate-100');
+                }
             });
-            button.classList.add('active');
+
+            const activeButtons = document.querySelectorAll(`button[data-filter-value="${filterValue}"]`);
+            activeButtons.forEach(activeBtn => {
+                if(activeBtn.dataset.filterType === filterType) {
+                    activeBtn.classList.add('active');
+                }
+            });
+
 
             renderProjects();
         }
@@ -315,15 +342,12 @@
                 return acc;
             }, {});
 
+            const labels = Object.keys(statusCounts);
             const data = {
-                labels: Object.keys(statusCounts),
+                labels: labels,
                 datasets: [{
                     data: Object.values(statusCounts),
-                    backgroundColor: [
-                        '#22C55E', // COMPLETE
-                        '#3B82F6', // ACTIVE
-                        '#F59E0B', // ON HOLD
-                    ],
+                    backgroundColor: labels.map(label => (statusConfig[label] ? statusConfig[label].color : '#64748B')),
                     borderColor: '#FDFBF8',
                     borderWidth: 4,
                 }]
@@ -358,7 +382,7 @@
                                     if (context.parsed !== null) {
                                         const total = context.chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
                                         const percentage = ((context.raw / total) * 100).toFixed(1) + '%';
-                                        label += `${context.raw} Projects (${percentage})`;
+                                        label += `${context.raw} Project(s) (${percentage})`;
                                     }
                                     return label;
                                 }
@@ -372,6 +396,7 @@
         filtersContainer.addEventListener('click', handleFilterClick);
         rosterList.addEventListener('click', handleFilterClick);
 
+        initStatusFilters();
         renderRoster();
         renderProjects();
         renderChart();

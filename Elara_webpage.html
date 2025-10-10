@@ -99,50 +99,6 @@
             display: block;
         }
         
-/*
- * Storybook Screen Styling
- * These rules make the storybook responsive, especially for mobile devices.
- */
-#storybook-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 90%; /* Use most of the screen width */
-    max-width: 500px; /* But not too wide on tablets/desktops */
-    height: 90vh; /* Use most of the screen height */
-    gap: 1rem; /* Adds some space between the image, text, and buttons */
-}
-
-#storybook-image-container {
-    flex-grow: 1; /* Allows the image container to fill the available vertical space */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden; /* Ensures the image doesn't spill out of its container */
-    width: 100%;
-}
-
-#storybook-image {
-    /* The magic property! This scales the image down to fit inside its container */
-    /* while maintaining its aspect ratio, without cropping it. */
-    object-fit: contain;
-    
-    /* We also set max-width and max-height as a fallback and good practice. */
-    max-width: 100%;
-    max-height: 100%;
-}
-
-#storybook-text-box {
-    width: 100%;
-    max-height: 30%; /* Prevents the text from taking up too much space */
-    overflow-y: auto; /* Makes the text scrollable if it's too long */
-    background-color: rgba(10, 14, 24, 0.7); /* Adds a nice backdrop */
-    padding: 1rem;
-    border-radius: 0.5rem;
-    box-sizing: border-box; /* Ensures padding is included in the width/height */
-}
-
         /* New styling for the chart canvas */
         #chart-canvas {
             background-color: transparent;
@@ -636,6 +592,7 @@
         <div style="flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;">
             <p style="text-align: center; font-size: 1.2rem; max-width: 600px; color: var(--text-white);">Join a global experiment. Contribute your device's power to solve the universe's greatest mysteries.</p>
             <button id="sign-in-button" class="button" style="background-color: var(--accent-ethereal-blue); margin-top: 2rem;">Sign In with Google</button>
+            <p style="color: yellow; font-size: 0.8rem; margin-top: 2rem; max-width: 90%; word-wrap: break-word;">Your Sandbox URL (copy this): <span id="sandbox-url"></span></p>
         </div>
     </div>
 
@@ -791,12 +748,14 @@
             <button id="close-settings-modal" class="button" style="margin-top: 2rem;">Close</button>
         </div>
     </div>
+
     <script>
         // This function handles the entire application logic.
         document.addEventListener('DOMContentLoaded', () => {
             // Get all necessary DOM elements for screen navigation and UI updates.
             const welcomeScreen = document.getElementById('welcome-screen');
             const signInButton = document.getElementById('sign-in-button');
+            const sandboxUrlSpan = document.getElementById('sandbox-url');
             const homeScreen = document.getElementById('home-screen');
             const aboutScreen = document.getElementById('about-screen');
             const myContributionScreen = document.getElementById('my-contribution-screen');
@@ -844,6 +803,9 @@
             let speakingTimeout = null;
             let tokenClient; // For Google Sign-In
             let saveInterval; // <-- ADD THIS LINE
+
+            // NEW: Display the sandbox URL
+            sandboxUrlSpan.textContent = window.location.origin;
 
             const storybookPages = [
                 {
@@ -1059,94 +1021,18 @@
                 return new Blob([view], { type: 'audio/wav' });
             }
             
-            // <--- MODIFIED / NEW CODE HERE: The Android Bridge Function --->
-            /**
-             * This function is called by the native Android app (via evaluateJavascript) 
-             * when it resumes after the sign-in Custom Tab is closed.
-             * It checks the session status and transitions the UI.
-             */
-            window.handleNativeLogin = function() {
-                console.log("handleNativeLogin() called by native app.");
-                // Check if the user is now authenticated (e.g., check for the token saved by the Custom Tab)
-                if (sessionStorage.getItem('gcp_access_token')) {
-                    console.log("User is authenticated. Transitioning to home screen.");
-                    // Transition the UI from welcome screen to home screen
-                    welcomeScreen.style.opacity = 0;
-                    setTimeout(() => {
-                        welcomeScreen.style.display = 'none';
-                        homeScreen.classList.remove('hidden');
-                    }, 1000);
-                } else {
-                    console.log("User is NOT authenticated. Staying on welcome screen.");
-                }
-            };
-            // <--- END MODIFIED / NEW CODE --->
-
-
             // --- NEW: Google Sign-In and API Call Logic ---
 
             // Function to get a temporary access token.
             function getAccessToken() {
                 tokenClient.requestAccessToken();
             }
-            
-            /**
-             * This is the success callback function for the GSI library.
-             * It conditionally redirects back to the native app for the mobile flow.
-             */
-            function handleCredentialResponse(response) {
-                if (response.credential) {
-                    console.log("GSI credential received. Simulating success.");
-            
-                    // Simulating saving the token to signal success
-                    sessionStorage.setItem('gsi_id_token', response.credential); 
-            
-                    // -----------------------------------------------------------
-                    // *** CRITICAL FIX: ONLY fire the deep link for the mobile app flow ***
-                    // We use window.self !== window.top to detect if we're in a Custom Tab or pop-up.
-                    const isAndroidWebView = navigator.userAgent.includes('wv');
-
-                    if (isAndroidWebView) {
-                        console.log("Running in Custom Tab/Pop-up. Redirecting to native app...");
-                        // Fire the deep link: This closes the Custom Tab and reopens the native app.
-                        window.location.href = "elara://auth/signed_in"; 
-                        
-                    } else {
-                        // This is the desktop browser flow.
-                        console.log("Running in top-level browser. Letting GSI handle session completion.");
-                        // We rely on the GSI script to close its own pop-up and complete the session.
-                        
-                        // To be thorough, we can manually call the success logic here (optional)
-                        // For the web flow, we can transition the UI right away:
-                        welcomeScreen.style.opacity = 0;
-                        setTimeout(() => {
-                            welcomeScreen.style.display = 'none';
-                            homeScreen.classList.remove('hidden');
-                        }, 1000);
-                    }
-                    // -----------------------------------------------------------
-                }
-            }
 
             // Initialize the Google Sign-In client.
             window.onload = function() {
                 // --- IMPORTANT ---
                 // You must get an OAuth 2.0 Client ID from Google Cloud Console and paste it here.
-                const CLIENT_ID = "746441380232-2bfhecsdr02uilecjq0f3mueno66sj78.apps.googleusercontent.com"; // Changed to 'auth' to match manifest
-
-                // <--- MODIFIED / NEW CODE HERE: Initialize GSI to use the Custom Tab callback --->
-                google.accounts.id.initialize({
-                    client_id: CLIENT_ID,
-                    callback: handleCredentialResponse, // Use the new function for the Custom Tab flow
-                    auto_select: false, // Don't auto-select if we want the user to click the button
-                });
-                
-                // Render the Google Sign-In button
-                google.accounts.id.renderButton(
-                    document.getElementById("sign-in-button"),
-                    { theme: "outline", size: "large", type: "standard", shape: "pill" }
-                );
-                // <--- END MODIFIED / NEW CODE --->
+                const CLIENT_ID = "746441380232-2bfhecsdr02uilecjq0f3mueno66sj78.apps.googleusercontent.com";
 
                 tokenClient = google.accounts.oauth2.initTokenClient({
                     client_id: CLIENT_ID,
@@ -1155,8 +1041,12 @@
                         if (tokenResponse && tokenResponse.access_token) {
                             // Store the access token for later use.
                             sessionStorage.setItem('gcp_access_token', tokenResponse.access_token);
-                            // NOTE: This block is primarily for getting the API access token 
-                            // AFTER the user has already successfully authenticated.
+                            // Move to the home screen after successful sign-in.
+                            welcomeScreen.style.opacity = 0;
+                            setTimeout(() => {
+                                welcomeScreen.style.display = 'none';
+                                homeScreen.classList.remove('hidden');
+                            }, 1000);
                         }
                     },
                 });
@@ -1166,7 +1056,7 @@
             async function makeAuthenticatedApiCall(url, payload) {
                 const accessToken = sessionStorage.getItem('gcp_access_token');
                 if (!accessToken) {
-                    // If no token, prompt the user to get one.
+                    // If no token, prompt the user to sign in again.
                     getAccessToken();
                     throw new Error("User not authenticated.");
                 }

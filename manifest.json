@@ -1,0 +1,10 @@
+{
+  "short_name": "Elara",
+  "name": "Elara BGC",
+  "start_url": "/bgc-website/Elara_webpage.html",
+  "display": "fullscreen",
+  "orientation": "portrait",
+  "background_color": "#000000",
+  "theme_color": "#000000"
+}
+

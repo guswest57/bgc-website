@@ -592,7 +592,6 @@
         <div style="flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;">
             <p style="text-align: center; font-size: 1.2rem; max-width: 600px; color: var(--text-white);">Join a global experiment. Contribute your device's power to solve the universe's greatest mysteries.</p>
             <button id="sign-in-button" class="button" style="background-color: var(--accent-ethereal-blue); margin-top: 2rem;">Sign In with Google</button>
-            <p style="color: yellow; font-size: 0.8rem; margin-top: 2rem; max-width: 90%; word-wrap: break-word;">Your Sandbox URL (copy this): <span id="sandbox-url"></span></p>
         </div>
     </div>
 
@@ -755,7 +754,6 @@
             // Get all necessary DOM elements for screen navigation and UI updates.
             const welcomeScreen = document.getElementById('welcome-screen');
             const signInButton = document.getElementById('sign-in-button');
-            const sandboxUrlSpan = document.getElementById('sandbox-url');
             const homeScreen = document.getElementById('home-screen');
             const aboutScreen = document.getElementById('about-screen');
             const myContributionScreen = document.getElementById('my-contribution-screen');
@@ -803,9 +801,6 @@
             let speakingTimeout = null;
             let tokenClient; // For Google Sign-In
             let saveInterval; // <-- ADD THIS LINE
-
-            // NEW: Display the sandbox URL
-            sandboxUrlSpan.textContent = window.location.origin;
 
             const storybookPages = [
                 {

@@ -1,0 +1,11 @@
+[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "com.example.elara",
+    "sha256_cert_fingerprints": [
+      "F1:39:58:45:85:F3:72:D1:39:C1:85:8A:43:62:1E:9D:5D:43:44:A0:6F:9C:6A:1B:D3:6A:9A:5C:EA:27:A0:A7"
+    ]
+  }
+}]
+

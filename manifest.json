@@ -1,10 +1,22 @@
 {
-  "short_name": "Elara",
-  "name": "Elara BGC",
+  "short_name": "C.C",
+  "name": "Collective Compute",
   "start_url": "/bgc-website/Elara_webpage.html",
   "display": "fullscreen",
   "orientation": "portrait",
   "background_color": "#000000",
-  "theme_color": "#000000"
+  "theme_color": "#000000",
+  "icons": [
+    {
+      "src": "/bgc-website/android-launchericon-192-192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "/bgc-website/android-launchericon-512-512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ]
 }
 

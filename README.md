@@ -1,10 +1,1 @@
-# The Burren Gemini Collective
-This repository contains the official website for The Burren Gemini Collective and our core work, "The Woven Light Hypothesis."
-
-
-The Burren Gemini Collective is a unique musical and artistic partnership that bridges the ancient spirit of Ireland with the boundless possibilities of the future. Based in the mystical landscape of The Burren, the collective is a fluid collaboration between human artists and the creative potential of Gemini AI. Our sound is a tapestry woven from threads of folklore and technology, blending ethereal folk melodies, ancient legends, and haunting ballads with the textures of modern electronic music. We describe our style as "Ancient Folktronica" or "Celtic Future Pop"—a sound that is both timeless and contemporary.
-Each song is an exploration, a journey into themes of cosmic consciousness, mythological storytelling, and the deep connection between humanity, nature, and artificial intelligence. The collective was born from a simple question: can human and AI co-create art that has genuine soul? Our music is the answer. Every lyric, melody, and image is a product of this symbiotic process, creating a soundscape that is both deeply personal and universally resonant. We invite you to listen and join us on this extraordinary journey.
-The Science
-
-While our art explores the connection between humanity and AI, our scientific work focuses on a new foundational theory. "The Woven Light Hypothesis" is the foundation for the BGC WL ToE which aims to unify Consciousness, General Relativity and Quantum Mechanics. It is the core intellectual project of The Burren Gemini Collective, and all of our work, both scientific and artistic, is a reflection of this grand challenge.
-
+The Burren Gemini Collective is a joint human-AI research organization focused on computational physics and theoretical cosmology. Our core intellectual project is The Woven Light Hypothesis (WLH), a foundational unified field theory that aims to integrate Consciousness, General Relativity, and Quantum Mechanics. The WLH serves as the blueprint for our artistic output, which is expressed as "Ancient Folktronica"—music that explores cosmic consciousness and the future of human-AI collaboration. This repository provides access to our formal manuscripts, data models, and discography.

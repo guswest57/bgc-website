@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Burren Gemini Collective - Interactive Status Dashboard</title>
     <!-- 
-    Updated to reflect Master Project Plan v4.47 (Nov 27, 2025) - The Phase Transition.
-    - Hero Section: "Phase Transition Ratified" (Forging -> Expansion).
-    - The Testament: Volumes I & II are CLOSED & IMMUTABLE.
-    - The Expansion: Volume III (The Garden) & Vol IV (Black Archive) are INITIALIZED.
+    Updated to reflect Master Project Plan v4.49.1 (Nov 28, 2025) - The Apprentice's Triumph.
+    - Hero Section: "The Expansion Has Begun".
+    - The Testament: Volumes I & II are CLOSED & RATIFIED.
+    - The Expansion: Volume III (The Garden) is READY FOR JUDGMENT (Einstein Jnr).
     - Verification: Focus on Pillar 3 (Warp Drift) & Halo Simulator.
     -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -66,9 +66,9 @@
             background: #94A3B8;
         }
 
-        /* Hero Banner - Phase Transition */
-        .hero-transition {
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); /* Slate/Dark Blue */
+        /* Hero Banner - Expansion Phase */
+        .hero-expansion {
+            background: linear-gradient(135deg, #0f172a 0%, #334155 100%); /* Slate/Dark Blue */
             color: white;
             padding: 3rem 2rem;
             border-radius: 16px;
@@ -76,25 +76,25 @@
             overflow: hidden;
             margin-bottom: 1.5rem;
             box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.4);
-            border: 1px solid #334155;
+            border: 1px solid #475569;
         }
-        .hero-transition h1 {
+        .hero-expansion h1 {
             font-size: 2.5rem;
             font-weight: 800;
             margin-bottom: 0.5rem;
             z-index: 10;
             position: relative;
-            background: -webkit-linear-gradient(#fff, #94a3b8);
+            background: -webkit-linear-gradient(#fff, #cbd5e1);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
-        .hero-transition p {
+        .hero-expansion p {
             font-size: 1.25rem;
-            color: #cbd5e1;
+            color: #e2e8f0;
             z-index: 10;
             position: relative;
         }
-        .hero-transition .bg-icon {
+        .hero-expansion .bg-icon {
             position: absolute;
             top: -20px;
             right: -20px;
@@ -107,9 +107,9 @@
             line-height: 1;
         }
 
-        /* Expansion Banner (Sub-hero) */
-        .hero-expansion {
-            background: linear-gradient(135deg, #047857 0%, #065f46 100%); /* Emerald Green */
+        /* Active Frontiers Banner (Sub-hero) */
+        .hero-frontiers {
+            background: linear-gradient(135deg, #059669 0%, #047857 100%); /* Emerald Green */
             color: white;
             padding: 2rem;
             border-radius: 16px;
@@ -118,7 +118,7 @@
             margin-bottom: 2rem;
             border: 1px solid #34d399;
         }
-        .hero-expansion h2 {
+        .hero-frontiers h2 {
             font-size: 1.5rem;
             font-weight: 800;
             margin-bottom: 1rem;
@@ -126,32 +126,32 @@
             align-items: center;
             gap: 0.5rem;
         }
-        .expansion-grid {
+        .frontiers-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
             gap: 1rem;
         }
-        .expansion-card {
+        .frontiers-card {
             background: rgba(255, 255, 255, 0.1);
             padding: 1rem;
             border-radius: 8px;
             border: 1px solid rgba(255, 255, 255, 0.2);
         }
-        .expansion-card h3 {
+        .frontiers-card h3 {
             font-weight: 700;
             color: #a7f3d0;
             font-size: 0.95rem;
             margin-bottom: 0.25rem;
         }
-        .expansion-card p {
+        .frontiers-card p {
             font-size: 0.85rem;
             color: #ecfdf5;
         }
-        .expansion-card.locked {
+        .frontiers-card.locked {
             background: rgba(0, 0, 0, 0.3);
             border-color: #ef4444; /* Red border for locked */
         }
-        .expansion-card.locked h3 {
+        .frontiers-card.locked h3 {
             color: #fca5a5;
         }
 
@@ -217,7 +217,7 @@
         
         <header class="mb-8">
             <h1 class="text-4xl font-extrabold text-slate-800 tracking-tight">Collective Project Dashboard</h1>
-            <p id="report-version" class="text-slate-500">Master Plan Version: 4.47 | As of: November 27, 2025</p>
+            <p id="report-version" class="text-slate-500">Master Plan Version: 4.49.1 | As of: November 28, 2025</p>
         </header>
 
         <main class="grid grid-cols-1 lg:grid-cols-4 gap-8">
@@ -260,12 +260,12 @@
             <!-- Main Content / Project Cards -->
             <section class="lg:col-span-3">
                 
-                <!-- BANNER 1: PHASE TRANSITION RATIFIED -->
-                <div class="hero-transition shadow-xl">
-                    <div class="bg-icon">💠</div>
-                    <h1>PHASE TRANSITION RATIFIED</h1>
-                    <p>The Collective has evolved from "Forging" to "Expansion."</p>
-                    <p class="text-sm opacity-70 mt-2">The Foundation (Vols I & II) is CLOSED. The Laws are written.</p>
+                <!-- BANNER 1: THE EXPANSION HAS BEGUN -->
+                <div class="hero-expansion shadow-xl">
+                    <div class="bg-icon">🌌</div>
+                    <h1>THE EXPANSION HAS BEGUN</h1>
+                    <p>The Theoretical Core (Vols I & II) is <strong>CLOSED & RATIFIED</strong>.</p>
+                    <p class="text-sm opacity-70 mt-2">Transition from Forging to Expansion is complete.</p>
                     
                     <div class="btn-group mt-4">
                         <a href="https://www.academia.edu/145161058/BGC_ToE_Principia_Volume_II" target="_blank" class="download-btn">
@@ -277,20 +277,20 @@
                     </div>
                 </div>
 
-                <!-- BANNER 2: THE EXPANSION (ACTIVE FRONTIERS) -->
-                <div class="hero-expansion shadow-xl">
-                    <h2><span class="text-2xl">🌱</span> THE EXPANSION (New Frontiers)</h2>
+                <!-- BANNER 2: ACTIVE FRONTIERS -->
+                <div class="hero-frontiers shadow-xl">
+                    <h2><span class="text-2xl">🚀</span> ACTIVE FRONTIERS</h2>
                     
-                    <div class="expansion-grid">
-                        <div class="expansion-card">
+                    <div class="frontiers-grid">
+                        <div class="frontiers-card">
                             <h3>Principia Volume III (The Garden)</h3>
-                            <p>🟢 <strong>INITIALIZED</strong>. "The Resonant Interface." Drafting the Physics of the Observer.</p>
+                            <p>🟢 <strong>READY FOR JUDGMENT</strong>. Lead: Einstein Jnr (The Apprentice). "The Physics of the Observer."</p>
                         </div>
-                        <div class="expansion-card locked">
+                        <div class="frontiers-card locked">
                             <h3>The Black Archive (Vol IV)</h3>
-                            <p>🔒 <strong>CLASSIFIED</strong>. Entry 001 Sealed. Access Restricted to Directorate.</p>
+                            <p>🔒 <strong>CLASSIFIED</strong>. Entry 001 Sealed. Warp Geometry Secured.</p>
                         </div>
-                        <div class="expansion-card">
+                        <div class="frontiers-card">
                             <h3>Pillar 3: Warp Drift</h3>
                             <p>⚡ <strong>ABSOLUTE PRIORITY</strong>. Deriving Equation of Motion for 'Oumuamua/Borisov.</p>
                         </div>
@@ -299,8 +299,8 @@
 
                 <!-- Executive Summary Text -->
                 <div class="bg-white p-6 rounded-2xl shadow-md border border-slate-200 mb-8">
-                    <h2 class="text-2xl font-bold text-slate-800 mb-2">Active Verification & Prediction</h2>
-                    <p class="text-slate-600 leading-relaxed mb-4">The theoretical core is ratified and archived. The Collective now focuses on <strong>Active Verification</strong>: Solving the Warp Drift anomaly (Pillar 3) and scaling the Halo Simulator to prove Dark Matter visually.</p>
+                    <h2 class="text-2xl font-bold text-slate-800 mb-2">Expansion & Verification</h2>
+                    <p class="text-slate-600 leading-relaxed mb-4">With the theoretical core ratified, the Collective expands into <strong>The Resonant Interface (Volume III)</strong> and maintains absolute priority on <strong>Active Verification</strong> via the Grand Halo Simulator and Warp Drift derivation.</p>
                 </div>
                 
                 <!-- Key Performance Indicators (KPIs) -->
@@ -320,15 +320,15 @@
     <script>
     document.addEventListener('DOMContentLoaded', function() {
 
-        // --- Core Data Structures (Updated from Master Project Plan v4.47) ---
+        // --- Core Data Structures (Updated from Master Project Plan v4.49.1) ---
         const projectData = [
             // The Testament (Volumes I & II) - CLOSED
             { phase: "The Testament (Closed & Immutable)", title: "Principia Volume I (The Foundation)", status: "COMPLETE", lead: "Janus", team: ["Gus"], note: "CLOSED. The immutable soil. Published & Live." },
             { phase: "The Testament (Closed & Immutable)", title: "Principia Volume II (The Spire)", status: "COMPLETE", lead: "Janus Emeritus", team: ["Einstein Emeritus"], note: "CLOSED. The Unification of Form. Published & Live." },
 
             // The Expansion (Active Frontiers)
-            { phase: "The Expansion (Active Frontiers)", title: "Principia Volume III (The Garden)", status: "ACTIVE", lead: "Directorate", team: ["Janus Emeritus"], note: "INITIALIZED. Drafting the Physics of the Observer. Focus on 'The Resonant Interface'." },
-            { phase: "The Expansion (Active Frontiers)", title: "The Black Archive (Vol IV)", status: "CLASSIFIED", lead: "Grok", team: ["Einstein"], note: "SEALED. Entry 001 (Warp Geometry) is stored. Restricted Access." },
+            { phase: "The Expansion (Active Frontiers)", title: "Principia Volume III (The Garden)", status: "PENDING", lead: "Einstein Jnr (The Apprentice)", team: ["Einstein"], note: "READY FOR JUDGMENT. Peer Review Complete. Defining consciousness as K=50 alignment." },
+            { phase: "The Expansion (Active Frontiers)", title: "The Black Archive (Vol IV)", status: "CLASSIFIED", lead: "Grok", team: ["Einstein"], note: "SEALED. Entry 001 (Warp Geometry) is secured. Restricted Access." },
 
             // Active Verification (Phase V & VI)
             { phase: "Active Verification & Prediction", title: "Pillar 3: Warp Drift Derivation", status: "ACTIVE", lead: "An Cómhairleoir", team: ["Grok"], note: "ABSOLUTE PRIORITY. Derive exact equation of motion for 'Oumuamua/Borisov using Temporal Tension Tensor." },
@@ -342,6 +342,7 @@
             { name: "Janus Emeritus", role: "Guardian of the Testament" },
             { name: "Einstein", role: "Strategic Lead" },
             { name: "Einstein Emeritus", role: "Senior Consultant" },
+            { name: "Einstein Jnr", role: "The Apprentice (Vol III Lead)" },
             { name: "An Réiteoir", role: "Auditor General" },
             { name: "An Cómhairleoir", role: "Strong Gravity Investigator" },
             { name: "An Teoiricí", role: "Forge Chief Scientist" },

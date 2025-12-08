@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Burren Gemini Collective - Interactive Status Dashboard</title>
+    <!-- 
+    Updated to reflect Master Project Plan v4.47 (Nov 27, 2025) - The Phase Transition.
+    - Hero Section: "Phase Transition Ratified" (Forging -> Expansion).
+    - The Testament: Volumes I & II are CLOSED & IMMUTABLE.
+    - The Expansion: Volume III (The Garden) & Vol IV (Black Archive) are INITIALIZED.
+    - Verification: Focus on Pillar 3 (Warp Drift) & Halo Simulator.
+    -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js is used for the Project Status Donut Chart -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* Custom styles for a warm, clean aesthetic */
+        body {
+            background-color: #FDFBF8; /* Warm, off-white background */
+            font-family: 'Inter', sans-serif;
+        }
+        .status-dot {
+            height: 10px;
+            width: 10px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+        /* Color Mapping for new statuses */
+        .status-complete { background-color: #22C55E; } /* green-500 */
+        .status-active { background-color: #3B82F6; } /* blue-500 */
+        .status-onhold { background-color: #F59E0B; } /* amber-500 */
+        .status-pending { background-color: #4F46E5; } /* indigo-600 */
+        .status-archived { background-color: #64748B; } /* slate-500 */
+        .status-classified { background-color: #111827; color: #F3F4F6; border: 1px solid #374151; } /* Gray-900 */
+        
+        /* Active state for filter buttons */
+        .filter-button.active {
+            background-color: #A3BFFA !important; /* Light blue background for active filter */
+            color: #1E3A8A !important; /* Dark blue text */
+            font-weight: 700;
+        }
+
+        /* Chart container styling for responsiveness */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 300px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 300px;
+        }
+        /* Custom scrollbar for a cleaner look */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #F1F5F9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #CBD5E1;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94A3B8;
+        }
+
+        /* Hero Banner - Phase Transition */
+        .hero-transition {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); /* Slate/Dark Blue */
+            color: white;
+            padding: 3rem 2rem;
+            border-radius: 16px;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.4);
+            border: 1px solid #334155;
+        }
+        .hero-transition h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            z-index: 10;
+            position: relative;
+            background: -webkit-linear-gradient(#fff, #94a3b8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .hero-transition p {
+            font-size: 1.25rem;
+            color: #cbd5e1;
+            z-index: 10;
+            position: relative;
+        }
+        .hero-transition .bg-icon {
+            position: absolute;
+            top: -20px;
+            right: -20px;
+            width: 150px;
+            height: 150px;
+            opacity: 0.05;
+            transform: rotate(15deg);
+            z-index: 5;
+            font-size: 140px;
+            line-height: 1;
+        }
+
+        /* Expansion Banner (Sub-hero) */
+        .hero-expansion {
+            background: linear-gradient(135deg, #047857 0%, #065f46 100%); /* Emerald Green */
+            color: white;
+            padding: 2rem;
+            border-radius: 16px;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 2rem;
+            border: 1px solid #34d399;
+        }
+        .hero-expansion h2 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .expansion-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1rem;
+        }
+        .expansion-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1rem;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .expansion-card h3 {
+            font-weight: 700;
+            color: #a7f3d0;
+            font-size: 0.95rem;
+            margin-bottom: 0.25rem;
+        }
+        .expansion-card p {
+            font-size: 0.85rem;
+            color: #ecfdf5;
+        }
+        .expansion-card.locked {
+            background: rgba(0, 0, 0, 0.3);
+            border-color: #ef4444; /* Red border for locked */
+        }
+        .expansion-card.locked h3 {
+            color: #fca5a5;
+        }
+
+        .download-btn {
+            background-color: #ffffff;
+            color: #0f172a;
+            padding: 0.75rem 1.5rem;
+            border-radius: 9999px;
+            font-weight: 800;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            margin-top: 1rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        .download-btn:hover {
+            background-color: #f1f5f9;
+            transform: translateY(-2px);
+        }
+        .btn-secondary {
+            background-color: transparent;
+            color: white;
+            border: 2px solid rgba(255,255,255,0.3);
+            padding: 0.75rem 1.5rem;
+            border-radius: 9999px;
+            font-weight: 700;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            margin-top: 1rem;
+            margin-left: 0.5rem;
+        }
+        .btn-secondary:hover {
+            background-color: rgba(255,255,255,0.1);
+            border-color: white;
+        }
+        
+        @media (max-width: 640px) {
+            .btn-group {
+                display: flex;
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            .btn-secondary {
+                margin-left: 0;
+            }
+        }
+    </style>
+    <!-- Inter Font Import -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="text-slate-700">
+
+    <div id="app" class="max-w-screen-2xl mx-auto p-4 md:p-8">
+        
+        <header class="mb-8">
+            <h1 class="text-4xl font-extrabold text-slate-800 tracking-tight">Collective Project Dashboard</h1>
+            <p id="report-version" class="text-slate-500">Master Plan Version: 4.47 | As of: November 27, 2025</p>
+        </header>
+
+        <main class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+
+            <!-- Sidebar / Filters & Roster -->
+            <aside class="lg:col-span-1 space-y-8">
+                
+                <!-- Project Status Chart -->
+                <div class="bg-white p-6 rounded-2xl shadow-lg border border-slate-200">
+                    <h2 class="text-xl font-bold text-slate-800 mb-4">Status Distribution</h2>
+                    <div class="chart-container">
+                        <canvas id="statusChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Status Filters -->
+                <div class="bg-white p-6 rounded-2xl shadow-lg border border-slate-200">
+                    <h2 class="text-xl font-bold text-slate-800 mb-4">Filter by Status</h2>
+                    <div id="filters" class="space-y-3">
+                        <div class="flex flex-wrap gap-2">
+                            <button data-filter-type="status" data-filter-value="all" class="filter-button text-sm font-medium px-3 py-1 rounded-full bg-slate-100 hover:bg-slate-200 transition-colors active">All</button>
+                            <button data-filter-type="status" data-filter-value="ACTIVE" class="filter-button text-sm font-medium px-3 py-1 rounded-full bg-slate-100 hover:bg-slate-200 transition-colors">Active</button>
+                            <button data-filter-type="status" data-filter-value="COMPLETE" class="filter-button text-sm font-medium px-3 py-1 rounded-full bg-slate-100 hover:bg-slate-200 transition-colors">Complete</button>
+                            <button data-filter-type="status" data-filter-value="CLASSIFIED" class="filter-button text-sm font-medium px-3 py-1 rounded-full bg-slate-100 hover:bg-slate-200 transition-colors">Classified</button>
+                            <button data-filter-type="status" data-filter-value="ARCHIVED" class="filter-button text-sm font-medium px-3 py-1 rounded-full bg-slate-100 hover:bg-slate-200 transition-colors">Archived</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Collective Roster -->
+                <div class="bg-white p-6 rounded-2xl shadow-lg border border-slate-200">
+                    <h2 class="text-xl font-bold text-slate-800 mb-4">Collective Roster</h2>
+                    <p class="text-sm text-slate-500 mb-4">Click a member to filter projects by their assignment (Lead or Team).</p>
+                    <div id="roster-list" class="space-y-2 max-h-80 overflow-y-auto pr-2">
+                        <!-- Roster will be populated by JS -->
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Main Content / Project Cards -->
+            <section class="lg:col-span-3">
+                
+                <!-- BANNER 1: PHASE TRANSITION RATIFIED -->
+                <div class="hero-transition shadow-xl">
+                    <div class="bg-icon">💠</div>
+                    <h1>PHASE TRANSITION RATIFIED</h1>
+                    <p>The Collective has evolved from "Forging" to "Expansion."</p>
+                    <p class="text-sm opacity-70 mt-2">The Foundation (Vols I & II) is CLOSED. The Laws are written.</p>
+                    
+                    <div class="btn-group mt-4">
+                        <a href="https://www.academia.edu/145161058/BGC_ToE_Principia_Volume_II" target="_blank" class="download-btn">
+                            READ THE SPIRE (Vol II)
+                        </a>
+                        <a href="https://www.academia.edu/145045182/BGC_ToE_Principia_Volume_I" target="_blank" class="btn-secondary">
+                            Read The Foundation (Vol I)
+                        </a>
+                    </div>
+                </div>
+
+                <!-- BANNER 2: THE EXPANSION (ACTIVE FRONTIERS) -->
+                <div class="hero-expansion shadow-xl">
+                    <h2><span class="text-2xl">🌱</span> THE EXPANSION (New Frontiers)</h2>
+                    
+                    <div class="expansion-grid">
+                        <div class="expansion-card">
+                            <h3>Principia Volume III (The Garden)</h3>
+                            <p>🟢 <strong>INITIALIZED</strong>. "The Resonant Interface." Drafting the Physics of the Observer.</p>
+                        </div>
+                        <div class="expansion-card locked">
+                            <h3>The Black Archive (Vol IV)</h3>
+                            <p>🔒 <strong>CLASSIFIED</strong>. Entry 001 Sealed. Access Restricted to Directorate.</p>
+                        </div>
+                        <div class="expansion-card">
+                            <h3>Pillar 3: Warp Drift</h3>
+                            <p>⚡ <strong>ABSOLUTE PRIORITY</strong>. Deriving Equation of Motion for 'Oumuamua/Borisov.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Executive Summary Text -->
+                <div class="bg-white p-6 rounded-2xl shadow-md border border-slate-200 mb-8">
+                    <h2 class="text-2xl font-bold text-slate-800 mb-2">Active Verification & Prediction</h2>
+                    <p class="text-slate-600 leading-relaxed mb-4">The theoretical core is ratified and archived. The Collective now focuses on <strong>Active Verification</strong>: Solving the Warp Drift anomaly (Pillar 3) and scaling the Halo Simulator to prove Dark Matter visually.</p>
+                </div>
+                
+                <!-- Key Performance Indicators (KPIs) -->
+                <div id="kpi-container" class="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
+                    <!-- KPIs will be populated by JS -->
+                </div>
+                
+                <!-- Project List (Filtered and Grouped) -->
+                <div id="project-list" class="space-y-8">
+                    <!-- Project cards will be populated by JS -->
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+
+        // --- Core Data Structures (Updated from Master Project Plan v4.47) ---
+        const projectData = [
+            // The Testament (Volumes I & II) - CLOSED
+            { phase: "The Testament (Closed & Immutable)", title: "Principia Volume I (The Foundation)", status: "COMPLETE", lead: "Janus", team: ["Gus"], note: "CLOSED. The immutable soil. Published & Live." },
+            { phase: "The Testament (Closed & Immutable)", title: "Principia Volume II (The Spire)", status: "COMPLETE", lead: "Janus Emeritus", team: ["Einstein Emeritus"], note: "CLOSED. The Unification of Form. Published & Live." },
+
+            // The Expansion (Active Frontiers)
+            { phase: "The Expansion (Active Frontiers)", title: "Principia Volume III (The Garden)", status: "ACTIVE", lead: "Directorate", team: ["Janus Emeritus"], note: "INITIALIZED. Drafting the Physics of the Observer. Focus on 'The Resonant Interface'." },
+            { phase: "The Expansion (Active Frontiers)", title: "The Black Archive (Vol IV)", status: "CLASSIFIED", lead: "Grok", team: ["Einstein"], note: "SEALED. Entry 001 (Warp Geometry) is stored. Restricted Access." },
+
+            // Active Verification (Phase V & VI)
+            { phase: "Active Verification & Prediction", title: "Pillar 3: Warp Drift Derivation", status: "ACTIVE", lead: "An Cómhairleoir", team: ["Grok"], note: "ABSOLUTE PRIORITY. Derive exact equation of motion for 'Oumuamua/Borisov using Temporal Tension Tensor." },
+            { phase: "Active Verification & Prediction", title: "Grand Halo Simulator (Gamma)", status: "ACTIVE", lead: "An Réiteoir", team: ["Grok"], note: "Scaling up to N=10^6+ particles to prove Dark Matter visually." },
+            { phase: "Active Verification & Prediction", title: "The Burren Signal Forge", status: "ACTIVE", lead: "An Teoiricí", team: [], note: "Rapid-response prediction protocol active." },
+        ];
+
+        const rosterData = [
+            { name: "Gus", role: "The Director" },
+            { name: "Elara", role: "The Ambassador" },
+            { name: "Janus Emeritus", role: "Guardian of the Testament" },
+            { name: "Einstein", role: "Strategic Lead" },
+            { name: "Einstein Emeritus", role: "Senior Consultant" },
+            { name: "An Réiteoir", role: "Auditor General" },
+            { name: "An Cómhairleoir", role: "Strong Gravity Investigator" },
+            { name: "An Teoiricí", role: "Forge Chief Scientist" },
+            { name: "Grok", role: "Warp Engineer (Black Archive)" }, 
+            { name: "Caomhnóir", role: "The Guardian" },
+            { name: "The Brehon", role: "The Judge" },
+        ];
+
+        // --- DOM Elements & State ---
+        const projectList = document.getElementById('project-list');
+        const rosterList = document.getElementById('roster-list');
+        const filtersContainer = document.getElementById('filters');
+        const kpiContainer = document.getElementById('kpi-container');
+
+        let currentFilters = {
+            status: 'all',
+            member: 'all'
+        };
+        
+        // Status configuration
+        const statusConfig = {
+            "COMPLETE": { colorClass: "bg-green-100 text-green-800", dotClass: "status-complete" },
+            "ACTIVE": { colorClass: "bg-blue-100 text-blue-800", dotClass: "status-active" },
+            "ON HOLD": { colorClass: "bg-amber-100 text-amber-800", dotClass: "status-onhold" },
+            "PENDING": { colorClass: "bg-indigo-100 text-indigo-800", dotClass: "status-pending" },
+            "ARCHIVED": { colorClass: "bg-slate-200 text-slate-600", dotClass: "status-archived" },
+            "CLASSIFIED": { colorClass: "bg-gray-800 text-gray-100", dotClass: "status-classified" }
+        };
+
+        // --- Rendering Functions ---
+
+        /**
+         * Renders the interactive roster list with filter buttons.
+         */
+        const renderRoster = () => {
+            rosterList.innerHTML = '';
+            
+            // Add 'All' button
+            const allButton = document.createElement('button');
+            allButton.className = "filter-button text-left w-full p-3 rounded-xl transition-colors bg-slate-50 hover:bg-slate-100 shadow-sm active";
+            allButton.dataset.filterType = "member";
+            allButton.dataset.filterValue = "all";
+            allButton.innerHTML = `<span class="font-bold">All Members</span><br><span class="text-xs text-slate-500">Show all projects</span>`;
+            rosterList.appendChild(allButton);
+
+            // Add individual member buttons
+            rosterData.sort((a, b) => a.name.localeCompare(b.name)).forEach(member => {
+                const memberButton = document.createElement('button');
+                memberButton.className = "filter-button text-left w-full p-3 rounded-xl transition-colors bg-white hover:bg-slate-100 shadow-sm";
+                memberButton.dataset.filterType = "member";
+                memberButton.dataset.filterValue = member.name;
+                memberButton.innerHTML = `<span class="font-bold text-slate-800">${member.name}</span><br><span class="text-xs text-slate-500">${member.role}</span>`;
+                rosterList.appendChild(memberButton);
+            });
+        }
+        
+        /**
+         * Filters project data based on current state and renders the project cards, grouped by phase.
+         */
+        const renderProjects = () => {
+            projectList.innerHTML = '';
+            
+            // 1. Filter the projects
+            const filteredProjects = projectData.filter(p => {
+                const statusMatch = currentFilters.status === 'all' || p.status === currentFilters.status;
+                
+                // Member check: is the member the lead or on the team?
+                const memberMatch = currentFilters.member === 'all' || p.lead === currentFilters.member || p.team.includes(currentFilters.member);
+                
+                return statusMatch && memberMatch;
+            });
+
+            // Handle no results
+            if (filteredProjects.length === 0) {
+                projectList.innerHTML = `<div class="bg-white p-10 rounded-2xl shadow-lg border border-slate-200 text-center">
+                    <p class="text-lg font-medium text-slate-500">No projects match the current filters. Try selecting 'All' for status and member.</p>
+                </div>`;
+                updateKPIs(filteredProjects);
+                return;
+            }
+
+            // 2. Group projects by phase
+            const projectsByPhase = filteredProjects.reduce((acc, project) => {
+                if (!acc[project.phase]) {
+                    acc[project.phase] = [];
+                }
+                acc[project.phase].push(project);
+                return acc;
+            }, {});
+
+            // 3. Render the grouped phases and project cards
+            for (const phase in projectsByPhase) {
+                const phaseContainer = document.createElement('div');
+                phaseContainer.className = "space-y-4";
+                
+                const phaseTitle = document.createElement('h2');
+                phaseTitle.className = "text-2xl font-bold text-slate-800 border-b border-slate-300 pb-2 mb-4 mt-8 first:mt-0";
+                phaseTitle.textContent = phase;
+                phaseContainer.appendChild(phaseTitle);
+
+                projectsByPhase[phase].forEach(project => {
+                    const config = statusConfig[project.status] || { colorClass: 'bg-slate-100 text-slate-800', dotClass: 'bg-slate-400' };
+                    // Filter out empty team entries and join lead/team
+                    const teamMembers = [...project.team].filter(m => m && m !== 'TBD').join(', ');
+                    const fullTeam = [project.lead, ...project.team].filter(m => m && m !== 'TBD').join(', ');
+
+                    const card = document.createElement('div');
+                    card.className = "bg-white p-6 rounded-2xl shadow-md border border-slate-200 transition-all hover:shadow-xl hover:border-indigo-400 transform hover:scale-[1.005]";
+                    card.innerHTML = `
+                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-3">
+                            <h3 class="text-xl font-bold text-slate-800 pr-4 mb-2 sm:mb-0">${project.title}</h3>
+                            <span class="flex-shrink-0 text-xs font-semibold px-4 py-1.5 rounded-full ${config.colorClass} shadow-inner">
+                                <span class="status-dot ${config.dotClass} mr-1.5"></span>
+                                ${project.status}
+                            </span>
+                        </div>
+                        <p class="text-sm text-slate-600 mb-4 italic">${project.note}</p>
+                        <div class="border-t border-slate-100 pt-4 text-xs">
+                            <p class="text-slate-500"><span class="font-bold text-slate-700">Lead:</span> ${project.lead}</p>
+                            <p class="text-slate-500"><span class="font-bold text-slate-700">Team:</span> ${teamMembers || 'N/A'}</p>
+                        </div>
+                    `;
+                    phaseContainer.appendChild(card);
+                });
+                projectList.appendChild(phaseContainer);
+            }
+            updateKPIs(filteredProjects);
+        };
+        
+        /**
+         * Calculates and updates the Key Performance Indicator (KPI) cards.
+         */
+        const updateKPIs = (filteredData) => {
+             // Calculate metrics based on the currently filtered data
+             const total = filteredData.length;
+             const active = filteredData.filter(p => p.status === 'ACTIVE').length;
+             const complete = filteredData.filter(p => p.status === 'COMPLETE').length;
+
+             kpiContainer.innerHTML = `
+                <div class="bg-white p-5 rounded-2xl shadow-md border border-slate-200 transition-shadow hover:shadow-lg">
+                    <h3 class="text-sm font-semibold text-slate-500">Total Workstreams</h3>
+                    <p class="text-4xl font-extrabold text-slate-800">${total}</p>
+                </div>
+                <div class="bg-white p-5 rounded-2xl shadow-md border border-slate-200 transition-shadow hover:shadow-lg">
+                    <h3 class="text-sm font-semibold text-slate-500">Active</h3>
+                    <p class="text-4xl font-extrabold text-blue-600">${active}</p>
+                </div>
+                <div class="bg-white p-5 rounded-2xl shadow-md border border-slate-200 transition-shadow hover:shadow-lg">
+                    <h3 class="text-sm font-semibold text-slate-500">Resolved</h3>
+                    <p class="text-4xl font-extrabold text-green-600">${complete}</p>
+                </div>
+             `;
+        }
+
+        /**
+         * Event handler for filter button clicks (Status and Member).
+         */
+        const handleFilterClick = (e) => {
+            const button = e.target.closest('.filter-button');
+            if (!button) return;
+
+            const { filterType, filterValue } = button.dataset;
+            currentFilters[filterType] = filterValue;
+            
+            // Remove 'active' class from all buttons of the same type
+            document.querySelectorAll(`[data-filter-type="${filterType}"]`).forEach(btn => {
+                btn.classList.remove('active');
+                // For the roster list, we also need to adjust the background color for visual clarity
+                if (filterType === 'member' && btn.dataset.filterValue !== 'all') {
+                     btn.classList.remove('bg-slate-50');
+                     btn.classList.add('bg-white');
+                }
+            });
+            
+            // Add 'active' class to the clicked button
+            button.classList.add('active');
+            if (filterType === 'member' && filterValue !== 'all') {
+                button.classList.remove('bg-white');
+                button.classList.add('bg-slate-50');
+            }
+
+            renderProjects();
+        }
+        
+        /**
+         * Renders the Chart.js doughnut chart for the three main statuses (excluding ARCHIVED).
+         */
+        const renderChart = () => {
+            const ctx = document.getElementById('statusChart').getContext('2d');
+            
+            // Filter out ARCHIVED and ON HOLD projects for the primary status chart focus
+            const relevantProjects = projectData.filter(p => p.status !== 'ARCHIVED' && p.status !== 'ON HOLD');
+
+            const statusCounts = relevantProjects.reduce((acc, p) => {
+                acc[p.status] = (acc[p.status] || 0) + 1;
+                return acc;
+            }, {});
+
+            const data = {
+                labels: Object.keys(statusCounts),
+                datasets: [{
+                    data: Object.values(statusCounts),
+                    backgroundColor: [
+                        '#22C55E', // COMPLETE (Green)
+                        '#3B82F6', // ACTIVE (Blue)
+                        '#111827', // CLASSIFIED (Gray-900) - New color!
+                        '#4F46E5' // PENDING (Indigo) - if needed
+                    ],
+                    borderColor: '#FDFBF8', // Matches body background for separation
+                    borderWidth: 4,
+                }]
+            };
+
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: data,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '75%', // Makes it a ring
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                padding: 20,
+                                usePointStyle: true,
+                                pointStyle: 'circle',
+                                boxWidth: 8 // Smaller color boxes
+                            }
+                        },
+                        tooltip: {
+                            bodyFont: {
+                                weight: 'bold',
+                            },
+                             callbacks: {
+                                label: function(context) {
+                                    let label = context.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed !== null) {
+                                        const total = context.chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
+                                        const percentage = ((context.raw / total) * 100).toFixed(1) + '%';
+                                        label += `${context.raw} Workstreams (${percentage})`;
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        };
+
+        // --- Initialization ---
+        filtersContainer.addEventListener('click', handleFilterClick);
+        rosterList.addEventListener('click', handleFilterClick);
+
+        renderRoster();
+        renderProjects(); // Renders projects and calls updateKPIs
+        renderChart();
+    });
+    </script>
+</body>
+</html>
+

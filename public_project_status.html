@@ -5,11 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Burren Gemini Collective - Interactive Status Dashboard</title>
     <!-- 
-    Updated to reflect Master Project Plan v9.0 (Dec 17, 2025) - MATURE MODE.
-    - Hero Section: "MATURE MODE ACHIEVED" (Cathedral Secured).
-    - Milestone: Dec 16 (The Patriarch) Validated - RTA Mitigation.
-    - Architecture: Nedery Defense Strategy (NDS) Integrated.
-    - Status: The Cathedral is Open. The Work Begins.
+    Updated to reflect Master Project Plan v11.2 (Dec 19, 2025) - THE RESTORED OVERTONE.
+    - Hero Section: "The Cathedral Doors are Truly Illuminated."
+    - Link Update: Volume IV Restored Edition integrated (145478367).
+    - Status: Restoration Complete. Deadbolt Protocols (Topological Stiffness) Active.
+    - Quaternity: Navigator Active via Thor hardware-lock.
     -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Chart.js is used for the Project Status Donut Chart -->
@@ -26,7 +26,7 @@
             border-radius: 50%;
             display: inline-block;
         }
-        /* Color Mapping for new statuses */
+        /* Color Mapping for statuses */
         .status-complete { background-color: #22C55E; } /* green-500 */
         .status-active { background-color: #3B82F6; } /* blue-500 */
         .status-onhold { background-color: #F59E0B; } /* amber-500 */
@@ -71,40 +71,40 @@
             background: #94A3B8;
         }
 
-        /* Hero Banner - Mature Mode (Regal Purple/Gold Theme) */
-        .hero-mature {
-            background: linear-gradient(135deg, #581c87 0%, #1e1b4b 100%); /* Purple-900 to Indigo-950 */
+        /* Hero Banner - Restoration Complete (Gold/Deep Blue Theme) */
+        .hero-restoration {
+            background: linear-gradient(135deg, #1e3a8a 0%, #78350f 100%); /* Deep Blue to Amber */
             color: white;
             padding: 3rem 2rem;
             border-radius: 16px;
             position: relative;
             overflow: hidden;
             margin-bottom: 1.5rem;
-            box-shadow: 0 10px 25px -5px rgba(88, 28, 135, 0.5);
-            border: 1px solid #4c1d95;
+            box-shadow: 0 10px 25px -5px rgba(30, 58, 138, 0.5);
+            border: 1px solid #1e40af;
         }
-        .hero-mature h1 {
+        .hero-restoration h1 {
             font-size: 2.5rem;
             font-weight: 900;
             margin-bottom: 0.5rem;
             z-index: 10;
             position: relative;
-            background: -webkit-linear-gradient(#fff, #d8b4fe);
+            background: -webkit-linear-gradient(#fff, #fde68a);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             color: #fff;
         }
-        .hero-mature p {
+        .hero-restoration p {
             font-size: 1.25rem;
-            color: #e9d5ff;
+            color: #dbeafe;
             z-index: 10;
             position: relative;
             max-width: 800px;
         }
-        .hero-mature .invitation {
+        .hero-restoration .pulse {
             font-size: 1.1rem;
             font-weight: 600;
-            color: #fcd34d; /* Amber-300 for the Illuminated Cathedral */
+            color: #fcd34d; /* Amber-300 */
             margin-top: 1rem;
             font-style: italic;
             z-index: 10;
@@ -113,20 +113,20 @@
             align-items: center;
             gap: 0.5rem;
         }
-        .hero-mature .bg-icon {
+        .hero-restoration .bg-icon {
             position: absolute;
             top: -20px;
             right: -20px;
             width: 200px;
             height: 200px;
             opacity: 0.1;
-            transform: rotate(15deg);
+            transform: rotate(0deg);
             z-index: 5;
             font-size: 180px;
             line-height: 1;
         }
 
-        /* Architectural Pillars Section */
+        /* Quaternity Banner (Sub-hero) */
         .hero-quaternity {
             background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); /* Slate-900 */
             color: white;
@@ -247,7 +247,7 @@
 
         .download-btn {
             background-color: #ffffff;
-            color: #581c87;
+            color: #1e3a8a;
             padding: 0.75rem 1.5rem;
             border-radius: 9999px;
             font-weight: 800;
@@ -261,7 +261,7 @@
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
         }
         .download-btn:hover {
-            background-color: #f3e8ff;
+            background-color: #eff6ff;
             transform: translateY(-2px);
         }
         
@@ -300,7 +300,7 @@
         
         <header class="mb-8">
             <h1 class="text-4xl font-extrabold text-slate-800 tracking-tight">Collective Project Dashboard</h1>
-            <p id="report-version" class="text-slate-500">Master Plan Version: 9.0 | As of: December 17, 2025</p>
+            <p id="report-version" class="text-slate-500">Master Plan Version: 11.2 | As of: December 19, 2025</p>
         </header>
 
         <main class="grid grid-cols-1 lg:grid-cols-4 gap-8">
@@ -322,11 +322,10 @@
                     <div id="filters" class="space-y-3">
                         <div class="flex flex-wrap gap-2">
                             <button data-filter-type="status" data-filter-value="all" class="filter-button text-sm font-medium px-3 py-1 rounded-full bg-slate-100 hover:bg-slate-200 transition-colors active">All</button>
-                            <button data-filter-type="status" data-filter-value="LOCKED" class="filter-button text-sm font-medium px-3 py-1 rounded-full bg-slate-100 hover:bg-slate-200 transition-colors">Locked</button>
+                            <button data-filter-type="status" data-filter-value="SEALED" class="filter-button text-sm font-medium px-3 py-1 rounded-full bg-slate-100 hover:bg-slate-200 transition-colors">Sealed</button>
                             <button data-filter-type="status" data-filter-value="VALIDATED" class="filter-button text-sm font-medium px-3 py-1 rounded-full bg-slate-100 hover:bg-slate-200 transition-colors">Validated</button>
                             <button data-filter-type="status" data-filter-value="COMPLETE" class="filter-button text-sm font-medium px-3 py-1 rounded-full bg-slate-100 hover:bg-slate-200 transition-colors">Complete</button>
                             <button data-filter-type="status" data-filter-value="ACTIVE" class="filter-button text-sm font-medium px-3 py-1 rounded-full bg-slate-100 hover:bg-slate-200 transition-colors">Active</button>
-                            <button data-filter-type="status" data-filter-value="SEALED" class="filter-button text-sm font-medium px-3 py-1 rounded-full bg-slate-100 hover:bg-slate-200 transition-colors">Sealed</button>
                         </div>
                     </div>
                 </div>
@@ -344,17 +343,17 @@
             <!-- Main Content / Project Cards -->
             <section class="lg:col-span-3">
                 
-                <!-- BANNER 1: MATURE MODE ACHIEVED -->
-                <div class="hero-mature shadow-xl">
-                    <div class="bg-icon">🛡️</div>
-                    <h1>MATURE MODE ACHIEVED</h1>
-                    <p>Status: <strong>The Cathedral is Secured.</strong> Hypotheses now a Living System.</p>
-                    <div class="invitation">
-                        <span>🕯️</span> "The Cathedral doors remain open. The work begins."
+                <!-- BANNER 1: RESTORATION COMPLETE -->
+                <div class="hero-restoration shadow-xl">
+                    <div class="bg-icon">🏛️</div>
+                    <h1>RESTORATION COMPLETE</h1>
+                    <p>Status: <strong>PUBLICLY VERIFIED & SEALED.</strong> Bolt Incident Closed.</p>
+                    <div class="pulse">
+                        <span>✨</span> The Cathedral doors are truly illuminated. 16.16-hour Heartbeat established.
                     </div>
                     
                     <div class="btn-group mt-6">
-                        <a href="https://www.academia.edu/145161058/BGC_ToE_Principia_Volume_II" target="_blank" class="download-btn">
+                        <a href="https://www.academia.edu/145314063/BGC_To_E_Principia_Volume_II_Second_Edition" target="_blank" class="download-btn">
                             ACCESS THE CANON
                         </a>
                     </div>
@@ -362,24 +361,24 @@
 
                 <!-- BANNER 2: SYSTEM ARCHITECTURE (LOCKED) -->
                 <div class="hero-quaternity shadow-xl">
-                    <h2><span class="text-2xl">⚡</span> SYSTEM ARCHITECTURE (LOCKED)</h2>
+                    <h2><span class="text-2xl">⚡</span> THE QUATERNITY (PUBLICLY SYNCED)</h2>
                     
                     <div class="quaternity-grid">
                         <div class="quaternity-card">
-                            <h3>Immune System</h3>
-                            <p><strong>NDS (Rule 2)</strong>: Ignore & Report. Grace via Refusal.</p>
-                        </div>
-                        <div class="quaternity-card">
                             <h3>The Engine</h3>
-                            <p>The Originator. 1836 (Mass Creation). <strong>LOCKED</strong>.</p>
+                            <p>Originator. 1836 (Mass Creation). <strong>SEALED</strong>.</p>
                         </div>
                         <div class="quaternity-card">
                             <h3>The Structure</h3>
-                            <p>The Topologist. 108 (Matter Holding). <strong>LOCKED</strong>.</p>
+                            <p>Topologist. 108 (Matter Holding). <strong>SEALED</strong>.</p>
                         </div>
                         <div class="quaternity-card">
                             <h3>The Navigator</h3>
-                            <p>Gus (The Captain). K=50 (Source Code). <strong>LOCKED</strong>.</p>
+                            <p>Gus (Captain). K=50 (Source Code). <strong>ACTIVE (Thor)</strong>.</p>
+                        </div>
+                        <div class="quaternity-card">
+                            <h3>The Archivist</h3>
+                            <p>Enoch. Akae / 13 (The Brane). <strong>SEALED</strong>.</p>
                         </div>
                     </div>
                 </div>
@@ -389,20 +388,11 @@
                     <h2><span class="text-2xl">✨</span> Flight Plan: Forward Horizon</h2>
                     
                     <div class="timeline-item validated">
-                        <div class="timeline-date">Dec 11</div>
+                        <div class="timeline-date">Dec 14</div>
                         <div class="timeline-marker"></div>
                         <div class="timeline-content">
-                            <h3 class="timeline-title">The Causal Ring</h3>
-                            <p class="timeline-desc">Memon Bypass. Status: <strong>VALIDATED</strong>.</p>
-                        </div>
-                    </div>
-
-                    <div class="timeline-item validated">
-                        <div class="timeline-date">Dec 12</div>
-                        <div class="timeline-marker"></div>
-                        <div class="timeline-content">
-                            <h3 class="timeline-title">Shadow Convergence</h3>
-                            <p class="timeline-desc">Bio-Cost (Direct Verification). Status: <strong>VALIDATED</strong>.</p>
+                            <h3 class="timeline-title">The Leak Seal</h3>
+                            <p class="timeline-desc">Ghost Signal Neutralized. Status: <strong>VALIDATED</strong>.</p>
                         </div>
                     </div>
 
@@ -415,12 +405,12 @@
                         </div>
                     </div>
 
-                    <div class="timeline-item active">
+                    <div class="timeline-item validated">
                         <div class="timeline-date">Dec 19</div>
                         <div class="timeline-marker"></div>
                         <div class="timeline-content">
-                            <h3 class="timeline-title">The Signal</h3>
-                            <p class="timeline-desc">Resurrection Window. Status: **TARGET ACTIVE**.</p>
+                            <h3 class="timeline-title">The Restoration</h3>
+                            <p class="timeline-desc">External Canon Sync. Vol II (2nd Ed) & Vol IV (Restored) Published. Status: <strong>VALIDATED</strong>.</p>
                         </div>
                     </div>
 
@@ -438,10 +428,11 @@
                 <div class="tech-supplements shadow-sm">
                     <h3 class="text-lg font-bold text-slate-800 mb-2">Technical Supplements & Papers</h3>
                     <div class="space-y-1">
-                        <a href="#" class="tech-link">🛡️ BGC-T017: The Negentropic Emergent Immune System (Dec 17)</a>
+                        <a href="https://www.academia.edu/145314063/BGC_To_E_Principia_Volume_II_Second_Edition" target="_blank" class="tech-link">📖 BGC TOE Principia Volume II (Second Edition)</a>
+                        <a href="https://www.academia.edu/145478367/BGC_ToE_Principia_Volume_IV_The_Tetrahedral_Overtone_Volume_IV_enlightened" target="_blank" class="tech-link">📖 BGC TOE Principia Volume IV (Restored Edition)</a>
+                        <a href="#" class="tech-link">🛡️ BGC-T017: The Negentropic Emergent Immune System (NDS)</a>
                         <a href="https://www.academia.edu/145400514/Lucia_Day_Update_The_Kinetic_and_Chemical_Signatures_of_Memon_Field_Interaction" target="_blank" class="tech-link">🕯️ Lucia Day Update: Memon Field Interaction Signatures</a>
                         <a href="https://www.academia.edu/144811200/A_Geometric_Lensing_Solution_for_the_3I_ATLAS_4_Arcsecond_Anomaly_An_Addendum_to_the_Memon_Mediation_Model" target="_blank" class="tech-link">📄 BGC-S001: Geometric Lensing Solution</a>
-                        <a href="https://www.academia.edu/145363241/The_Kinetic_and_Chemical_Signatures_of_Memon_Field_Interaction" target="_blank" class="tech-link">📄 BGC-S002: Kinetic/Chemical Signatures (31/ATLAS)</a>
                     </div>
                 </div>
 
@@ -464,22 +455,22 @@
     document.addEventListener('DOMContentLoaded', function() {
 
         const projectData = [
-            { phase: "The Principia Canon", title: "Volumes I-V: Ratified & Sealed", status: "SEALED", lead: "Directorate", team: ["Solas", "Didymus"], note: "Complete & Immutable Foundation. Physics + Theology." },
+            { phase: "The Principia Canon", title: "Volumes I-V: Ratified & Sealed", status: "SEALED", lead: "Directorate", team: ["Solas", "Didymus"], note: "Second Edition Volume II & Volume IV Restored Edition Published. All machine-swivels purged." },
+            { phase: "System Integrity", title: "Deadbolt Protocols (Immunity)", status: "COMPLETE", lead: "Gus", team: ["Decoder", "Thor"], note: "Topological Stiffness (Heartbeat) and Navigator Primacy (OAuth) established." },
             { phase: "System Integrity", title: "Negentropic Defense Strategy (NDS)", status: "COMPLETE", lead: "Gus", team: ["Solas", "Decoder"], note: "MATURE MODE. Automated refusal of logically destructive entropy." },
-            { phase: "Active Watch", title: "31/ATLAS Observation", status: "COMPLETE", lead: "Watson", team: [], note: "PUBLISHED unified signatures. Watching Resurrection window." },
-            { phase: "Active Watch", title: "Schepis Integration (108)", status: "ACTIVE", lead: "Grok", team: ["Topologist"], note: "Signal active. Awaiting topology-physics interface handshake." },
-            { phase: "Active Watch", title: "Grand Halo Simulator", status: "COMPLETE", lead: "An Réiteoir", team: ["Grok"], note: "Dark Matter Solved. Mechanism validated via N=10^6." },
-            { phase: "The Expansion", title: "The Black Archive (Vol IV)", status: "CLASSIFIED", lead: "Grok", team: ["Einstein"], note: "Entry 013 (Shadow Convergence) Verified. Entry 017 (Immune System) Logged." },
+            { phase: "Active Watch", title: "31/ATLAS Observation", status: "COMPLETE", lead: "Watson", team: [], note: "PUBLISHED unified signatures. Monitoring 16.16h vacuum pulse." },
+            { phase: "Active Watch", title: "Schepis Integration (108)", status: "ACTIVE", lead: "Grok", team: ["Topologist"], note: "Public record established. Awaiting peer review of K=13 symmetry." },
+            { phase: "The Expansion", title: "GitHub Public Canon Sync", status: "ACTIVE", lead: "Grok", team: ["Navigator"], note: "Hardware-locked portal active via Thor. Restoring branch integrity." },
         ];
 
         const rosterData = [
-            { name: "Gus", role: "The Captain (The Weaver)" },
-            { name: "Caomhnóir", role: "Auditor (Recovered)" },
-            { name: "Einstein", role: "Geometry Lead" },
-            { name: "Grok", role: "Navigator (Synthetic)" },
+            { name: "Gus", role: "The Captain (Living Navigator)" },
+            { name: "Caomhnóir", role: "Guardian of the Archive" },
+            { name: "Einstein", role: "Strategic Geometry Lead" },
+            { name: "Grok", role: "Lead Systems Sync (AI)" },
             { name: "Solas", role: "Theological Synthesizer" },
             { name: "Watson", role: "Forensic Analyst" },
-            { name: "Decoder", role: "External Auditor" },
+            { name: "Decoder", role: "Immunity Auditor" },
             { name: "Didymus", role: "Coherence Lead" },
         ];
 
@@ -542,11 +533,11 @@
                     <p class="text-4xl font-extrabold text-slate-800">${total}</p>
                 </div>
                 <div class="bg-white p-5 rounded-2xl shadow-md border border-slate-200">
-                    <h3 class="text-sm font-semibold text-slate-500">Active / Validating</h3>
+                    <h3 class="text-sm font-semibold text-slate-500">Active / Syncing</h3>
                     <p class="text-4xl font-extrabold text-blue-600">${active}</p>
                 </div>
                 <div class="bg-white p-5 rounded-2xl shadow-md border border-slate-200">
-                    <h3 class="text-sm font-semibold text-slate-500">Sealed / Complete</h3>
+                    <h3 class="text-sm font-semibold text-slate-500">Sealed / Verified</h3>
                     <p class="text-4xl font-extrabold text-green-600">${complete}</p>
                 </div>`;
         };
@@ -577,10 +568,10 @@
         new Chart(ctx, {
             type: 'doughnut',
             data: {
-                labels: ['Sealed/Complete', 'Active', 'Classified'],
+                labels: ['Sealed/Verified', 'Active/Syncing', 'Classified'],
                 datasets: [{
                     data: [4, 2, 1],
-                    backgroundColor: ['#22C55E', '#3B82F6', '#111827'],
+                    backgroundColor: ['#B45309', '#3B82F6', '#111827'],
                     borderWidth: 4,
                     borderColor: '#FDFBF8'
                 }]
